@@ -1,34 +1,44 @@
-import { useState } from 'react';
-import { Button, Col, Container, Row } from 'react-bootstrap';
-import { getGuess } from './API';
+import { useState } from "react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import Layout from "./components/layout";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import Home from "./pages/home/home";
+import Login from "./pages/login/login";
+import Signup from "./pages/signup/signup";
+import ModifyPage from "./pages/modify-page/modify-page";
+import Page from "./pages/page/page";
+import Settings from "./pages/settings/settings";
+import NoMatch from "./pages/nomatch/nomatch";
 
-import 'bootstrap/dist/css/bootstrap.min.css';
-
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: "#B8C7FB",
+    },
+    secondary: {
+      main: "#F7DA42",
+    },
+  },
+});
 
 function App() {
-
-  const [guess, setGuess] = useState(100);
-
-  const newGuess = async () => {
-    try {
-      const n = await getGuess();
-      setGuess(n);
-    } catch (e) {
-      console.log(e);
-    }
-  }
-
   return (
-    <Container>
-      <Row>
-        <h1>App</h1>
-      </Row>
-      <Row>
-        <Col><Button onClick={newGuess}>Guess a number</Button></Col>
-        <Col>{guess}</Col>
-      </Row>
-    </Container>
-  )
+    <ThemeProvider theme={theme}>
+      <Router>
+        <Routes>
+          <Route path="/" element={<Layout />}>
+            <Route index element={<Home />} />
+            <Route path="/login" element={<Login/>} />
+            <Route path="/signup" element={<Signup/>} />
+            <Route path="/modifyPage" element={<ModifyPage/>} />
+            <Route path="/page" element={<Page/>} />
+            <Route path="/settings" element={<Settings/>} />
+            <Route path = "*" element={<NoMatch/>}></Route>
+          </Route>
+        </Routes>
+      </Router>
+    </ThemeProvider>
+  );
 }
 
-export default App
+export default App;
