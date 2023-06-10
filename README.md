@@ -52,3 +52,11 @@
 
 - username, password (plus any other requested info)
 - username, password (plus any other requested info)
+
+
+## isStrongPassword()
+Lunghezza minima: La password deve essere di almeno 8 caratteri di lunghezza.
+Almeno un carattere maiuscolo: La password deve contenere almeno una lettera maiuscola.
+Almeno un carattere minuscolo: La password deve contenere almeno una lettera minuscola.
+Almeno un numero: La password deve contenere almeno un numero.
+Almeno un carattere speciale: La password deve contenere almeno un carattere speciale come !@#$%^&*()_+-=[]{}|:;<>,.?/~.
