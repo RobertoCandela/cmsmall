@@ -20,9 +20,10 @@ const { v4: uuidv4 } = require("uuid");
 //   });
 // };
 
+
 exports.getAllPages = () => {
   return new Promise((resolve, reject) => {
-    const sql = "SELECT * FROM PAGES";
+    const sql = "SELECT * FROM pages";
     db.all(sql, (err, row) => {
       if (err) {
         reject(err);
@@ -32,40 +33,11 @@ exports.getAllPages = () => {
     });
   });
 };
-// This function is used at log-in time to verify username and password.
-// exports.getUser = (email, password) => {
-//   return new Promise((resolve, reject) => {
-//     const sql = "SELECT * FROM users";
-//     db.get(sql, [email], (err, row) => {
-//       if (err) {
-//         reject(err);
-//       } else if (row === undefined) {
-//         resolve(false);
-//       } else {
-//         const user = { id: row.id, username: row.email, name: row.name };
 
-//         // Check the hashes with an async call, this operation may be CPU-intensive (and we don't want to block the server)
-//         crypto.scrypt(password, row.salt, 32, function (err, hashedPassword) {
-//           // WARN: it is 64 and not 32 (as in the week example) in the DB
-//           if (err) reject(err);
-//           if (
-//             !crypto.timingSafeEqual(
-//               Buffer.from(row.hash, "hex"),
-//               hashedPassword
-//             )
-//           )
-//             // WARN: it is hash and not password (as in the week example) in the DB
-//             resolve(false);
-//           else resolve(user);
-//         });
-//       }
-//     });
-//   });
-// };
 
 exports.getPage = (page_id) => {
   return new Promise((resolve, reject) => {
-    const sql = "SELECT * FROM PAGES WHERE PAGES.UUID_PAGE = ?";
+    const sql = "SELECT * FROM pages WHERE pages.id = ?";
     db.get(sql, [page_id], (err, row) => {
       if (err) {
         reject(err);
@@ -91,7 +63,7 @@ exports.createPage = (page) => {
     console.log("creationTime: "+now)
 
     const sql =
-      "INSERT INTO PAGES (UUID_PAGE, TITLE, AUTHOR, CREATED_AT, PUBLICATION_DATE) VALUES(?, ?, ?, ?, ?)";
+      "INSERT INTO pages (id, title, author, created_at, publication_date) VALUES(?, ?, ?, ?, ?)";
     db.run(
       sql,
       [

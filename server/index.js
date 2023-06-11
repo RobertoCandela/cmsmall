@@ -3,11 +3,22 @@
 const PORT = 3000;
 const express = require("express");
 const userDao = require("./dao-users");
-const pageDao = require("./dao-pages")
+const pageDao = require("./dao-pages");
 const cors = require("cors");
+const passport = require("passport");
+const LocalStrategy = require("passport-local");
 const { check, validationResult } = require("express-validator");
 
 const app = express();
+
+passport.use(
+  new LocalStrategy(async function verify(username, password, callback) {
+    const user = await userDao.getUser(username, password);
+    if (!user) return callback(null, false, "Incorrect username or password");
+
+    return callback(null, user); // NOTE: user info in the session (all fields returned by userDao.getUser, i.e, id, username, name)
+  })
+);
 
 app.use(express.json());
 app.use(cors());
@@ -27,12 +38,17 @@ app.get("/users", (req, res) => {
 app.post(
   "/users",
   [
-    check("name").isLength({ min: 1, max: 50 }).withMessage('invalid name'),
-    check("surname").isLength({ min: 1, max: 50 }).withMessage('invalid surname'),
-    check("username").isLength({ min: 1, max: 20 }).withMessage('invalid username'),
-    check("email").isEmail().withMessage('invalid email'),
-    check("password").isStrongPassword().withMessage('password not strong enough'),
-
+    check("name").isLength({ min: 1, max: 50 }).withMessage("invalid name"),
+    check("surname")
+      .isLength({ min: 1, max: 50 })
+      .withMessage("invalid surname"),
+    check("username")
+      .isLength({ min: 1, max: 20 })
+      .withMessage("invalid username"),
+    check("email").isEmail().withMessage("invalid email"),
+    check("password")
+      .isStrongPassword()
+      .withMessage("password not strong enough"),
   ],
   (req, res) => {
     const errors = validationResult(req).formatWith(errorFormatter); // format error message
@@ -61,66 +77,110 @@ app.post(
       .catch((err) => res.status(500).json(err));
   }
 );
-app.get('/users/:id',(req,res)=>{
-
-    userDao
-    .getUser(req.params.id)
+app.get("/users/:id", (req, res) => {
+  userDao
+    .getUserById(req.params.id)
     .then((resp) => {
       res.json(resp);
     })
     .catch((err) => res.status(500).json(err));
+});
 
-})
+app.delete("/users/:id", (req, res) => {
+  userDao
+    .deleteUser(req.params.id)
+    .then((resp) => {
+      res.status(204).json(resp);
+    })
+    .catch((err) => res.status(500).json(err));
+});
 
 app.get("/pages", (req, res) => {
-    pageDao
-      .getAllPages()
-      .then((resp) => {
-        res.json(resp);
-      })
-      .catch((err) => res.status(500).json(err));
-  });
-app.get('/pages/:id',(req,res)=>{
-
-    pageDao
+  pageDao
+    .getAllPages()
+    .then((resp) => {
+      res.json(resp);
+    })
+    .catch((err) => res.status(500).json(err));
+});
+app.get("/pages/:id", (req, res) => {
+  pageDao
     .getPage(req.params.id)
     .then((resp) => {
       res.json(resp);
     })
     .catch((err) => res.status(500).json(err));
-
-})
+});
 app.post(
-    "/pages",
-    [
-      check("title").isLength({ min: 1, max: 50 }).withMessage('invalid title'),
-      check("author").isLength({ min: 1, max: 50 }).withMessage('invalid author'), 
-      check("publication_date").optional().isDate({format: 'DD-MM-YYYY'}).withMessage('invalid publication_date')
-    ],
-    (req, res) => {
-      const errors = validationResult(req).formatWith(errorFormatter); // format error message
-      if (!errors.isEmpty()) {
-        return res.status(422).json({ error: errors.array().join(", ") }); // error message is a single string with all error joined together
-      }
-      //validazione
-      console.log(req.body);
-      //   if (!req.body.name || !req.body.email) {
-      //     return res.status(400).json({ error: "Name and email are required" });
-      //   }
-      const page = {
-        title: req.body.title,
-        author: req.body.author,
-        publication_date: req.body.publication_date
-      };
-  
-      pageDao
-        .createPage(page)
-        .then((resp) => {
-          res.status(201).json(resp);
-        })
-        .catch((err) => res.status(500).json(err));
+  "/pages",
+  [
+    check("title").isLength({ min: 1, max: 50 }).withMessage("invalid title"),
+    check("author").isLength({ min: 1, max: 50 }).withMessage("invalid author"),
+    check("publication_date")
+      .optional()
+      .isDate({ format: "DD-MM-YYYY" })
+      .withMessage("invalid publication_date"),
+  ],
+  (req, res) => {
+    const errors = validationResult(req).formatWith(errorFormatter); // format error message
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ error: errors.array().join(", ") }); // error message is a single string with all error joined together
     }
-  );
+    //validazione
+    console.log(req.body);
+    //   if (!req.body.name || !req.body.email) {
+    //     return res.status(400).json({ error: "Name and email are required" });
+    //   }
+    const page = {
+      title: req.body.title,
+      author: req.body.author,
+      publication_date: req.body.publication_date,
+    };
+
+    pageDao
+      .createPage(page)
+      .then((resp) => {
+        res.status(201).json(resp);
+      })
+      .catch((err) => res.status(500).json(err));
+  }
+);
+
+//Authentication API
+app.post("/api/sessions", function (req, res, next) {
+  passport.authenticate("local", (err, user, info) => {
+    if (err) return next(err);
+    if (!user) {
+      // display wrong login messages
+      return res.status(401).json({ error: info });
+    }
+    // success, perform the login and extablish a login session
+    req.login(user, (err) => {
+      if (err) return next(err);
+
+      // req.user contains the authenticated user, we send all the user info back
+      // this is coming from userDao.getUser() in LocalStratecy Verify Fn
+      return res.json(req.user);
+    });
+  })(req, res, next);
+});
+
+// GET /api/sessions/current
+// This route checks whether the user is logged in or not.
+app.get("/api/sessions/current", (req, res) => {
+  if (req.isAuthenticated()) {
+    res.status(200).json(req.user);
+  } else res.status(401).json({ error: "Not authenticated" });
+});
+
+// DELETE /api/session/current
+// This route is used for loggin out the current user.
+app.delete("/api/sessions/current", (req, res) => {
+  req.logout(() => {
+    res.status(200).json({});
+  });
+});
+
 const port = 3000;
 app.listen(port, () => {
   console.log(`Server Express in esecuzione sulla porta ${port}`);
