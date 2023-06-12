@@ -7,6 +7,7 @@ const pageDao = require("./dao-pages");
 const cors = require("cors");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
+const session = require('express-session');
 const { check, validationResult } = require("express-validator");
 
 const app = express();
@@ -19,13 +20,38 @@ passport.use(
     return callback(null, user); // NOTE: user info in the session (all fields returned by userDao.getUser, i.e, id, username, name)
   })
 );
+passport.serializeUser(function (user, callback) { // this user is id + username + name 
+  callback(null, user);
+});
+
+passport.deserializeUser(function (user, callback) { // this user is id + email + name 
+  // if needed, we can do extra check here (e.g., double check that the user is still in the database, etc.)
+  // e.g.: return userDao.getUserById(id).then(user => callback(null, user)).catch(err => callback(err, null));
+
+  return callback(null, user); // this will be available in req.user
+});
 
 app.use(express.json());
 app.use(cors());
+
+app.use(session({
+  secret: "shhhhh... it's a secret!",
+  resave: false,
+  saveUninitialized: false,
+}));
+
+app.use(passport.authenticate('session'));
+
 const errorFormatter = ({ location, msg, param, value, nestedErrors }) => {
   return `${location}[${param}]: ${msg}`;
 };
 
+app.get('/sessions/current', (req, res) => {
+  if(req.isAuthenticated()) {
+    res.status(200).json(req.user);}
+  else
+    res.status(401).json({error: 'Not authenticated'});
+});
 // Esempio di route che esegue una query sul database
 app.get("/users", (req, res) => {
   userDao
@@ -74,7 +100,11 @@ app.post(
       .then((resp) => {
         res.status(201).json(resp);
       })
-      .catch((err) => res.status(500).json(err));
+      .catch((err) =>{
+        if(err.status){
+          res.status(err.status).json(err)
+        }
+      });
   }
 );
 app.get("/users/:id", (req, res) => {
@@ -147,7 +177,7 @@ app.post(
 );
 
 //Authentication API
-app.post("/api/sessions", function (req, res, next) {
+app.post("/sessions", function (req, res, next) {
   passport.authenticate("local", (err, user, info) => {
     if (err) return next(err);
     if (!user) {
