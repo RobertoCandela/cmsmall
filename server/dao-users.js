@@ -79,7 +79,6 @@ exports.getUserById = (user_id) => {
     });
   });
 };
-
 //ritorna true o false in base al fatto se l'utente esiste oppure no
 
 const checkUniqueUser = (user) => {

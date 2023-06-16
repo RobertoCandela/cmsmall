@@ -20,10 +20,12 @@ const { v4: uuidv4 } = require("uuid");
 //   });
 // };
 
-
+// SELECT pages.id_page, users.username
+// FROM pages
+// JOIN users ON pages.author_id = users.user_id;
 exports.getAllPages = () => {
   return new Promise((resolve, reject) => {
-    const sql = "SELECT * FROM pages";
+    const sql = "SELECT pages.*, users.username FROM pages JOIN users ON pages.author = users.id";
     db.all(sql, (err, row) => {
       if (err) {
         reject(err);
@@ -49,6 +51,20 @@ exports.getPage = (page_id) => {
   });
 };
 
+exports.getPageAuthor = () =>{
+  return new Promise((resolve, reject) => {
+    const sql = "SELECT username FROM users,pages WHERE pages.id = users.id AND pages.id = ?";
+    db.get(sql, [page_id], (err, row) => {
+      if (err) {
+        reject(err);
+      } else {
+        console.log(row)
+        resolve(row);
+      }
+    });
+  });
+
+}
 exports.createPage = (page) => {
   return new Promise((resolve, reject) => {
     // db.run(sql, [film.title, film.favorite, film.watchDate, film.rating, film.user], function (err)

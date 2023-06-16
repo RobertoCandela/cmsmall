@@ -30,8 +30,8 @@ function App() {
             <Route index element={<Home />} />
             <Route path="/login" element={<Login/>} />
             <Route path="/signup" element={<Signup/>} />
-            <Route path="/modifyPage" element={<ModifyPage/>} />
-            <Route path="/page" element={<Page/>} />
+            <Route path="/modifyPage/:id" element={<ModifyPage/>} />
+            <Route path="/page/:id" element={<Page/>} />
             <Route path="/settings" element={<Settings/>} />
             <Route path = "*" element={<NoMatch/>}></Route>
           </Route>
