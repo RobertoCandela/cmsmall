@@ -3,9 +3,11 @@ import "./home.css";
 import { getPages } from "../../service/page-service";
 import PageCard from "../../components/page-card";
 import Button from "@mui/material/Button";
+import { useNavigate } from "react-router-dom";
 
 function Home() {
   const [dataList, setDataList] = useState([]);
+  const history = useNavigate();
 
   const getPagesHandler = async () => {
     getPages().then((resp) => {
@@ -37,7 +39,9 @@ function Home() {
             ></PageCard>
           ))}
       </div>
-      <Button variant="contained" sx={{ marginTop: "30px", maxWidth: "190px" }}>
+      <Button variant="contained" sx={{ marginTop: "30px", maxWidth: "190px" }} onClick={()=>{
+        history('/page/new')
+      }}>
         Create New Page
       </Button>
     </div>
