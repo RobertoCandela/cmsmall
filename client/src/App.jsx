@@ -10,6 +10,7 @@ import Page from "./pages/page/page";
 import Settings from "./pages/settings/settings";
 import NoMatch from "./pages/nomatch/nomatch";
 import { CssBaseline } from "@mui/material";
+import { NewPage } from "./pages/new-page/NewPage";
 
 const theme = createTheme({
   palette: {
@@ -39,6 +40,7 @@ function App() {
             <Route path="/signup" element={<Signup/>} />
             <Route path="/modifyPage/:id" element={<ModifyPage/>} />
             <Route path="/page/:id" element={<Page/>} />
+            <Route path="/page/new" element = {<NewPage/>} />
             <Route path="/settings" element={<Settings/>} />
             <Route path = "*" element={<NoMatch/>}></Route>
           </Route>
