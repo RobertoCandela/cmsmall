@@ -9,7 +9,7 @@ import { EditPageSVG } from "../assets/editPageSVG";
 import { deletePage } from "../service/page-service";
 import Modal from "./modal";
 //TODO: manage edit and delete based on user profiles
-function PageCard({ data, getPages }) {
+function PageCard({ data, getPages,style }) {
   const [hover, setHover] = useState(false);
   const [open, setOpen] = useState(false);
   const history = useNavigate();
@@ -27,6 +27,7 @@ function PageCard({ data, getPages }) {
         className="card theme"
         onMouseEnter={() => setHover(true)}
         onMouseLeave={() => setHover(false)}
+        style = {style}
       >
         <div className="overlay"></div>
         <div className="circle">

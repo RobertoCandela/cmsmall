@@ -19,7 +19,13 @@ function Home() {
   }, []);
 
   return (
-    // <div style={{display:"flex", alignItems:"center", flexDirection:"column", width:"100vw"}}>
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        flexDirection: "column"
+      }}
+    >
       <div className="grid">
         {dataList &&
           dataList.map((data, index) => (
@@ -27,11 +33,14 @@ function Home() {
               data={data}
               getPages={getPagesHandler}
               key={index}
+              style={{ margin: "10px" }}
             ></PageCard>
           ))}
       </div>
-      //<Button variant="contained" sx={{marginTop:"30px", maxWidth:"150px"}}>Create New Page</Button>
-    // </div>
+      <Button variant="contained" sx={{ marginTop: "30px", maxWidth: "190px" }}>
+        Create New Page
+      </Button>
+    </div>
   );
 }
 export default Home;
