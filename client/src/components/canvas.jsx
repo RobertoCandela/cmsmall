@@ -5,9 +5,9 @@ import { StrictModeDroppable } from './droppable';
 
 export function Canvas(){
   const [sourceItems, setSourceItems] = useState([
-    { id: 'item-1', content: 'Elemento 1' },
-    { id: 'item-2', content: 'Elemento 2' },
-    { id: 'item-3', content: 'Elemento 3' },
+    { id: 'h', content: '<h>Header</h>' },
+    { id: 'p', content: '<p>Paragraph</p>' },
+    { id: 'img', content: '<img>Image</img>' },
   ]);
 
   const [destinationItems, setDestinationItems] = useState([]);
@@ -20,7 +20,7 @@ export function Canvas(){
     const draggedItem = result.source.droppableId === 'source'
       ? sourceItems[sourceIndex]
       : destinationItems[sourceIndex];
-      
+
     if (result.destination.droppableId === 'destination') {
       const updatedDestinationItems = [...destinationItems];
       if (result.source.droppableId !== 'destination') {
