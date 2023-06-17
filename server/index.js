@@ -141,6 +141,16 @@ app.get("/pages/:id", (req, res) => {
     })
     .catch((err) => res.status(500).json(err));
 });
+
+app.delete("/pages/:id", (req, res) => {
+  pageDao
+    .deletePage(req.params.id)
+    .then((resp) => {
+      res.status(204).json(resp);
+    })
+    .catch((err) => res.status(500).json(err));
+});
+
 app.post(
   "/pages",
   [

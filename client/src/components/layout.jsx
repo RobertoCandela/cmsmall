@@ -17,7 +17,7 @@ function Layout() {
   const [isLogged, setIsLogged] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
-  const [appName,setAppName] = useState("CMSmall")
+  const [appName, setAppName] = useState("CMSmall");
   const navigate = useNavigate();
 
   const theme = useTheme();
@@ -35,10 +35,11 @@ function Layout() {
       <AppBar position="static">
         <Toolbar>
           <div style={{ flexGrow: 1 }}>
-            <div onClick={() => navigate("/")} style={{display: "inline-block"}}>
-              <Typography variant="h5">
-              {appName}
-              </Typography>
+            <div
+              onClick={() => navigate("/")}
+              style={{ display: "inline-block" }}
+            >
+              <Typography variant="h5">{appName}</Typography>
             </div>
           </div>
           {isLogged ? (
@@ -97,9 +98,14 @@ function Layout() {
           alignItems: "center",
           display: "flex",
           justifyContent: "center",
+          position: "absolute",
+          width: "100vw",
+          bottom: 0,
         }}
       >
-        <Typography variant="h6">{appName}®2023</Typography>
+        <Typography variant="h6" color="primary.contrastText">
+          {appName}®2023
+        </Typography>
       </div>
     </Box>
   );

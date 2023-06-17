@@ -1,8 +1,8 @@
 .theme {
-  --bg-color: #ffd861;
-  --bg-color-light: #ffeeba;
-  --text-color-hover: #4c5656;
-  --box-shadow-color: rgba(255, 215, 97, 0.48);
+  --bg-color: #6F9BD9;
+  --bg-color-light: #91afd8;
+  --text-color-hover: #e1edfd;
+  --box-shadow-color: rgba(111, 155, 217, 0.48);
 }
 
 .card {
@@ -41,7 +41,7 @@
 }
 
 .card:hover .typography {
-  /* color: var(--text-color-hover); */
+  color: var(--text-color-hover);
 }
 
 .card:active {

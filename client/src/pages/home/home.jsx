@@ -5,17 +5,22 @@ import PageCard from "../../components/page-card";
 
 function Home() {
   const [dataList, setDataList] = useState([]);
-  //viene fatto solo al primo render della pagina perchè le quadre sono vuote e non ci sono variabili che possono cambiare
-  useEffect(() => {
+
+  const getPagesHandler = async () => {
     getPages().then((resp) => {
       setDataList(resp);
       console.log(resp);
     });
+    
+  };
+  //viene fatto solo al primo render della pagina perchè le quadre sono vuote e non ci sono variabili che possono cambiare
+  useEffect(() => {
+    getPagesHandler()
   }, []);
 
   return (
     <div className="grid">
-      {dataList && dataList.map((data) => <PageCard data={data}></PageCard>)}
+      {dataList && dataList.map((data,index) => <PageCard data={data} getPages={getPagesHandler} key={index}></PageCard>)}
     </div>
   );
 }

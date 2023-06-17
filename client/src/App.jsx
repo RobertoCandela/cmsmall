@@ -9,21 +9,28 @@ import ModifyPage from "./pages/modify-page/modify-page";
 import Page from "./pages/page/page";
 import Settings from "./pages/settings/settings";
 import NoMatch from "./pages/nomatch/nomatch";
+import { CssBaseline } from "@mui/material";
 
 const theme = createTheme({
   palette: {
     primary: {
-      main: "#B8C7FB",
+      main: "#27374D",
+      contrastText: "#CFE0F2"
     },
     secondary: {
-      main: "#F7DA42",
+      main: "#D8D8D8",
+      contrastText: "#1A2433"
     },
+    background : {
+      default : "#E8ECF0"
+    }
   },
 });
 
 function App() {
   return (
     <ThemeProvider theme={theme}>
+      <CssBaseline/>
       <Router>
         <Routes>
           <Route path="/" element={<Layout />}>

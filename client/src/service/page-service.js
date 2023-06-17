@@ -11,3 +11,17 @@ export const getPages = async () => {
     throw(err)
   }
 };
+
+export const deletePage = async (pageId) =>{
+
+  try {
+    const response = await fetch(url + `/pages/${pageId}`,{ method: 'DELETE' });
+    if (response.status === 204) {
+      return response.status
+    }
+  } catch (err) {
+    console.log(err);
+    throw(err)
+  }
+
+};

@@ -51,6 +51,20 @@ exports.getPage = (page_id) => {
   });
 };
 
+exports.deletePage = (page_id) => {
+  return new Promise((resolve, reject) => {
+    const sql = "DELETE FROM pages WHERE pages.id = ?";
+    db.run(sql, [page_id], (err, row) => {
+      if (err) {
+        reject(err);
+      } else {
+        console.log(row)
+        resolve(row);
+      }
+    });
+  });
+};
+
 exports.getPageAuthor = () =>{
   return new Promise((resolve, reject) => {
     const sql = "SELECT username FROM users,pages WHERE pages.id = users.id AND pages.id = ?";

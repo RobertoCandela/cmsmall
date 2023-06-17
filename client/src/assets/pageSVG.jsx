@@ -1,5 +1,3 @@
-import React from "react";
-
 export const PageSVG = ({ ...props }) => (
   <svg
     version="1.1"
