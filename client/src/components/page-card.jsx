@@ -1,11 +1,10 @@
 import { IconButton, Typography } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/DeleteRounded";
 import EditIcon from "@mui/icons-material/EditRounded";
-import { PageSVG } from "../assets/pageSVG";
+import { PageSVG } from "../../assets/pageSVG";
 import "./page-card.css";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { EditPageSVG } from "../assets/editPageSVG";
 import { deletePage } from "../service/page-service";
 import Modal from "./modal";
 //TODO: manage edit and delete based on user profiles

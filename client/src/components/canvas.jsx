@@ -6,7 +6,13 @@ import { StrictModeDroppable } from "./droppable";
 import SubjectRoundedIcon from "@mui/icons-material/SubjectRounded";
 import TextFieldsRoundedIcon from "@mui/icons-material/TextFieldsRounded";
 import PhotoSizeSelectActualRoundedIcon from "@mui/icons-material/PhotoSizeSelectActualRounded";
-import { Typography } from "@mui/material";
+import { IconButton, Typography } from "@mui/material";
+import { Header } from "./header";
+import { Paragraph } from "./paragraph";
+
+import { Image } from "./image";
+
+import { HighlightOffRounded } from "@mui/icons-material";
 
 export function Canvas({ destinationItems, setDestinationItems }) {
   const [sourceItems, setSourceItems] = useState([
@@ -45,7 +51,8 @@ export function Canvas({ destinationItems, setDestinationItems }) {
       if (result.source.droppableId !== "destination") {
         updatedDestinationItems.splice(destinationIndex, 0, {
           id: uuidv4(),
-          content: draggedItem.content,
+          content: '',
+          itemType: draggedItem.id,
         });
       } else {
         const [removedItem] = updatedDestinationItems.splice(sourceIndex, 1);
@@ -55,24 +62,58 @@ export function Canvas({ destinationItems, setDestinationItems }) {
     }
   };
 
-  function renderItem(data) {
-    //Render logic here
+  function discardItem(id) {
+    const aux = destinationItems.filter((i) => i.id != id);
+    setDestinationItems(aux);
+  }
 
-    switch (data.id) {
-      case "p": {
-        break;
+  function handleSelectedImage(path, item_id) {
+    console.log("path: " + path);
+
+    console.log("item_id: " + item_id);
+    const aux = [...destinationItems]
+    aux.forEach(e=>{
+      if(e.id===item_id){
+        e.content=path
       }
+    })
+    setDestinationItems(aux)
+  }
+
+  function renderItem(item) {
+    //Render logic here
+    console.log(item);
+    switch (item.itemType) {
       case "h": {
-        break;
+        console.log("header");
+        return (
+          <Header item={item} discardItem={() => discardItem(item.id)}></Header>
+        );
+      }
+      case "p": {
+        console.log("paragraph");
+        return (
+          <Paragraph
+            item={item}
+            discardItem={() => discardItem(item.id)}
+          ></Paragraph>
+        );
       }
       case "img": {
-        break;
+        console.log("image");
+
+        return (
+          <Image
+            item={item}
+            discardItem={() => discardItem(item.id)}
+            handleSelectedImage={(path) => handleSelectedImage(path, item.id)}
+          ></Image>
+        );
       }
-      default:{
-        console.log("Not a valid render item")
+      default: {
+        console.log("Not a valid render item");
       }
     }
-    return data;
   }
 
   return (
@@ -89,6 +130,7 @@ export function Canvas({ destinationItems, setDestinationItems }) {
                   ? "2px dashed #27374D"
                   : "1px dashed #ccc",
                 marginRight: "50px",
+                overflow: 'auto', height: '100vh'
               }}
               {...provided.droppableProps}
             >
@@ -115,10 +157,10 @@ export function Canvas({ destinationItems, setDestinationItems }) {
                         {...provided.dragHandleProps}
                         style={{
                           userSelect: "none",
-                          padding: "16px",
                           margin: "0 0 8px 0",
                           backgroundColor: "#fff",
                           border: "1px solid #ddd",
+                          position: "relative",
                           ...provided.draggableProps.style,
                         }}
                       >
