@@ -2,7 +2,7 @@ import { HighlightOffRounded } from "@mui/icons-material";
 import { IconButton, TextField, Typography } from "@mui/material";
 import { useState } from "react";
 
-export function Header({ item, discardItem }) {
+export function Header({ item, discardItem, handleSelectedItem }) {
   const [onHoverComponent, setOnHoverComponent] = useState(false);
 
   return (
@@ -24,6 +24,7 @@ export function Header({ item, discardItem }) {
         fullWidth
         placeholder="Header"
         inputProps={{ style: { fontSize: "30px", fontWeight: "bold" } }}
+        onChange={(e)=>handleSelectedItem(e.target.value)}
       ></TextField>
     </div>
   );

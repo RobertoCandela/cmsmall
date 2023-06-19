@@ -72,7 +72,10 @@ export function NewPage() {
       <ButtonGroup
         sx={{ display: "flex", justifyContent: "center", marginTop: "20px", paddingBottom: '64px'}}
       >
-        <Button variant="contained">Save</Button>
+        <Button variant="contained" onClick={()=>{
+          console.log('payload from create Page')
+          console.log(canvasItem)
+        }}>Save</Button>
         <Button
           variant="contained"
           color="error"

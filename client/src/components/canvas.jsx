@@ -52,7 +52,7 @@ export function Canvas({ destinationItems, setDestinationItems }) {
         updatedDestinationItems.splice(destinationIndex, 0, {
           id: uuidv4(),
           content: '',
-          itemType: draggedItem.id,
+          itemType: draggedItem.id
         });
       } else {
         const [removedItem] = updatedDestinationItems.splice(sourceIndex, 1);
@@ -79,6 +79,19 @@ export function Canvas({ destinationItems, setDestinationItems }) {
     })
     setDestinationItems(aux)
   }
+  function handleSelectedItem(content,item_id){
+    console.log("content: " + content);
+
+    console.log("item_id: " + item_id);
+    const aux = [...destinationItems]
+    aux.forEach(e=>{
+      if(e.id===item_id){
+        e.content=content
+      }
+    })
+    setDestinationItems(aux)
+
+  }
 
   function renderItem(item) {
     //Render logic here
@@ -87,7 +100,7 @@ export function Canvas({ destinationItems, setDestinationItems }) {
       case "h": {
         console.log("header");
         return (
-          <Header item={item} discardItem={() => discardItem(item.id)}></Header>
+          <Header item={item} discardItem={() => discardItem(item.id)}  handleSelectedItem={(content)=>handleSelectedItem(content,item.id)}></Header>
         );
       }
       case "p": {
@@ -96,6 +109,7 @@ export function Canvas({ destinationItems, setDestinationItems }) {
           <Paragraph
             item={item}
             discardItem={() => discardItem(item.id)}
+            handleSelectedItem={(content)=>handleSelectedItem(content,item.id)}
           ></Paragraph>
         );
       }

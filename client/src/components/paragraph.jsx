@@ -3,7 +3,7 @@ import { IconButton, TextField, TextareaAutosize } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import { useState } from "react";
 
-export function Paragraph({ item, discardItem }) {
+export function Paragraph({ item, discardItem,handleSelectedItem }) {
   const [onHoverComponent, setOnHoverComponent] = useState(false);
 
   return (
@@ -29,6 +29,7 @@ export function Paragraph({ item, discardItem }) {
         multiline
         fullWidth
         placeholder="Paragraph"
+        onChange={(e)=>handleSelectedItem(e.target.value)}
       ></TextField>
     </div>
   );
