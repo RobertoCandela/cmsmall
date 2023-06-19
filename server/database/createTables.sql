@@ -16,11 +16,11 @@ CREATE TABLE IF NOT EXISTS users (
 
 CREATE TABLE IF NOT EXISTS blocks (
    id varchar(36) PRIMARY KEY,
-   name varchar(50) NOT NULL,
-   type varchar(50) NOT NULL,
-   contents varchar(50) NOT NULL,
+   blockType varchar(50) NOT NULL,
+   content varchar(200) NOT NULL,
    page_blocks varchar (16) NOT NULL,
-   item_order integer
+   item_order integer,
+   FOREIGN KEY (page_blocks) REFERENCES pages(id)
 );
 
 CREATE TABLE IF NOT EXISTS pages (
@@ -43,15 +43,15 @@ INSERT INTO pages (id, title, author, created_at, publication_date)
 VALUES ('42d1f247-8c0f-4d0e-8949-20d501014d8a', 'Bifrost', 'ea148da9-1ed9-4e78-904e-462ab9c72e41', '2023-10-14T22:11:20+0000', '2023-10-14');
 
 -- Inserimento dati nella tabella blocks
-INSERT INTO blocks (id, name, type, contents, page_blocks, item_order)
-VALUES ('7f5389c9-3f7e-45a5-b16a-8d29ff10c943', 'p1', 'paragraph', 'questo è un paragrafo!','42d1f247-8c0f-4d0e-8949-20d501014d8a', 1);
+-- INSERT INTO blocks (id, name, type, contents, page_blocks, item_order)
+-- VALUES ('7f5389c9-3f7e-45a5-b16a-8d29ff10c943', 'p1', 'paragraph', 'questo è un paragrafo!','42d1f247-8c0f-4d0e-8949-20d501014d8a', 1);
 
--- Inserimento dati nella tabella blocks
-INSERT INTO blocks (id, name, type, contents, page_blocks, item_order)
-VALUES ('d9a1a55b-0e5e-4f32-a227-979af3622eb4', 'h1', 'header', 'questo è un header!','42d1f247-8c0f-4d0e-8949-20d501014d8a', 0);
+-- -- Inserimento dati nella tabella blocks
+-- INSERT INTO blocks (id, name, type, contents, page_blocks, item_order)
+-- VALUES ('d9a1a55b-0e5e-4f32-a227-979af3622eb4', 'h1', 'header', 'questo è un header!','42d1f247-8c0f-4d0e-8949-20d501014d8a', 0);
 
--- Inserimento dati nella tabella blocks
-INSERT INTO blocks (id, name, type, contents, page_blocks, item_order)
-VALUES ('25d259ef-6625-41f7-9eb1-862b4e123f9b', 'img1', 'image', 'questa è un immagine!','42d1f247-8c0e-8949-20d501014d8a', 2);
+-- -- Inserimento dati nella tabella blocks
+-- INSERT INTO blocks (id, name, type, contents, page_blocks, item_order)
+-- VALUES ('25d259ef-6625-41f7-9eb1-862b4e123f9b', 'img1', 'image', 'questa è un immagine!','42d1f247-8c0e-8949-20d501014d8a', 2);
 
 -- Inserimento dati nella tabella pages

@@ -52,7 +52,7 @@ export function Canvas({ destinationItems, setDestinationItems }) {
         updatedDestinationItems.splice(destinationIndex, 0, {
           id: uuidv4(),
           content: '',
-          itemType: draggedItem.id
+          blockType: draggedItem.id
         });
       } else {
         const [removedItem] = updatedDestinationItems.splice(sourceIndex, 1);
@@ -96,7 +96,7 @@ export function Canvas({ destinationItems, setDestinationItems }) {
   function renderItem(item) {
     //Render logic here
     console.log(item);
-    switch (item.itemType) {
+    switch (item.blockType) {
       case "h": {
         console.log("header");
         return (

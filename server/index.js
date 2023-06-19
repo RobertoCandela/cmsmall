@@ -7,8 +7,9 @@ const pageDao = require("./dao-pages");
 const cors = require("cors");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
-const session = require('express-session');
+const session = require("express-session");
 const { check, validationResult } = require("express-validator");
+const bodyParser = require("body-parser");
 
 const app = express();
 
@@ -20,11 +21,13 @@ passport.use(
     return callback(null, user); // NOTE: user info in the session (all fields returned by userDao.getUser, i.e, id, username, name)
   })
 );
-passport.serializeUser(function (user, callback) { // this user is id + username + name 
+passport.serializeUser(function (user, callback) {
+  // this user is id + username + name
   callback(null, user);
 });
 
-passport.deserializeUser(function (user, callback) { // this user is id + email + name 
+passport.deserializeUser(function (user, callback) {
+  // this user is id + email + name
   // if needed, we can do extra check here (e.g., double check that the user is still in the database, etc.)
   // e.g.: return userDao.getUserById(id).then(user => callback(null, user)).catch(err => callback(err, null));
 
@@ -33,24 +36,26 @@ passport.deserializeUser(function (user, callback) { // this user is id + email 
 
 app.use(express.json());
 app.use(cors());
+app.use(bodyParser.json());
 
-app.use(session({
-  secret: "shhhhh... it's a secret!",
-  resave: false,
-  saveUninitialized: false,
-}));
+app.use(
+  session({
+    secret: "shhhhh... it's a secret!",
+    resave: false,
+    saveUninitialized: false,
+  })
+);
 
-app.use(passport.authenticate('session'));
+app.use(passport.authenticate("session"));
 
 const errorFormatter = ({ location, msg, param, value, nestedErrors }) => {
   return `${location}[${param}]: ${msg}`;
 };
 
-app.get('/sessions/current', (req, res) => {
-  if(req.isAuthenticated()) {
-    res.status(200).json(req.user);}
-  else
-    res.status(401).json({error: 'Not authenticated'});
+app.get("/sessions/current", (req, res) => {
+  if (req.isAuthenticated()) {
+    res.status(200).json(req.user);
+  } else res.status(401).json({ error: "Not authenticated" });
 });
 // Esempio di route che esegue una query sul database
 app.get("/users", (req, res) => {
@@ -100,9 +105,9 @@ app.post(
       .then((resp) => {
         res.status(201).json(resp);
       })
-      .catch((err) =>{
-        if(err.status){
-          res.status(err.status).json(err)
+      .catch((err) => {
+        if (err.status) {
+          res.status(err.status).json(err);
         }
       });
   }
@@ -137,7 +142,7 @@ app.get("/pages/:id", (req, res) => {
   pageDao
     .getPage(req.params.id)
     .then((resp) => {
-      res.json(resp);
+      return res.json(resp);
     })
     .catch((err) => res.status(500).json(err));
 });
@@ -158,11 +163,26 @@ app.post(
     check("author").isLength({ min: 1, max: 50 }).withMessage("invalid author"),
     check("publication_date")
       .optional()
-      .isDate({ format: "DD-MM-YYYY" })
+      .isDate({ format: "YYYY-MM-DD" })
       .withMessage("invalid publication_date"),
+    check("blocks")
+      .isArray()
+      .notEmpty()
+      .custom((value) => {
+        const containsHeader = value.some((obj) => obj.blockType === "h");
+        if (!containsHeader) {
+          throw new Error(
+            "Almost one header is required!"
+          );
+        }
+        return true;
+      }),
   ],
   (req, res) => {
     const errors = validationResult(req).formatWith(errorFormatter); // format error message
+    console.log(req.body);
+    console.log("errors..");
+    console.log(errors);
     if (!errors.isEmpty()) {
       return res.status(422).json({ error: errors.array().join(", ") }); // error message is a single string with all error joined together
     }
@@ -175,12 +195,13 @@ app.post(
       title: req.body.title,
       author: req.body.author,
       publication_date: req.body.publication_date,
+      blocks : req.body.blocks
     };
 
     pageDao
       .createPage(page)
       .then((resp) => {
-        res.status(201).json(resp);
+        return res.status(201).json(resp);
       })
       .catch((err) => res.status(500).json(err));
   }
