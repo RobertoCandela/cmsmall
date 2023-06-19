@@ -70,7 +70,7 @@ export function NewPage() {
         setDestinationItems={setCanvasItem}
       />
       <ButtonGroup
-        sx={{ display: "flex", justifyContent: "center", marginTop: "20px" }}
+        sx={{ display: "flex", justifyContent: "center", marginTop: "20px", paddingBottom: '64px'}}
       >
         <Button variant="contained">Save</Button>
         <Button

@@ -130,7 +130,7 @@ export function Canvas({ destinationItems, setDestinationItems }) {
                   ? "2px dashed #27374D"
                   : "1px dashed #ccc",
                 marginRight: "50px",
-                overflow: 'auto', height: '100vh'
+                // overflow: 'auto', height: '100vh'
               }}
               {...provided.droppableProps}
             >

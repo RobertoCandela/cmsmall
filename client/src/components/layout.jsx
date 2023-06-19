@@ -85,12 +85,15 @@ function Layout() {
           )}
         </Toolbar>
       </AppBar>
-
-      <Container maxWidth="xl">
-        <Box sx={{ height: "calc(100vh - 192px)", padding: "32px" }}>
+      <div style={{padding:'32px'}}>
+      {/* <Container maxWidth="xl">
+        <Box sx={{ height: "calc(100vh - 192px)", padding: "32px" }}> */}
           <Outlet />
-        </Box>
-      </Container>
+        {/* </Box>
+     </Container>   */}
+     </div>
+      
+
       <div
         style={{
           height: "64px",
@@ -98,9 +101,10 @@ function Layout() {
           alignItems: "center",
           display: "flex",
           justifyContent: "center",
-          position: "absolute",
-          width: "100vw",
+          position: "fixed",
+          width: "100%",
           bottom: 0,
+          marginTop: "auto"
         }}
       >
         <Typography variant="h6" color="primary.contrastText">
