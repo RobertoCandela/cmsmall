@@ -3,19 +3,19 @@ import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import Button from "@mui/material/Button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
 import IconButton from "@mui/material/IconButton";
 import Container from "@mui/material/Container";
-import { Link, Outlet, useNavigate } from "react-router-dom";
+import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useTheme } from "@mui/material/styles";
+import { getCurrentSession } from "../service/auth-service";
 
-function Layout() {
+function Layout({ isLogged, user, logout }) {
   // useState(false) inizializza lo stato della variabile isLogged
-  const [isLogged, setIsLogged] = useState(false);
-  const [isAdmin, setIsAdmin] = useState(false);
+  
   const [anchorEl, setAnchorEl] = useState(null);
   const [appName, setAppName] = useState("CMSmall");
   const navigate = useNavigate();
@@ -44,7 +44,7 @@ function Layout() {
           </div>
           {isLogged ? (
             <>
-              <Typography variant="h6">Username</Typography>
+              <Typography variant="h6">{user.username}</Typography>
               <IconButton
                 size="large"
                 aria-label="account of current user"
@@ -63,10 +63,16 @@ function Layout() {
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
               >
-                <MenuItem onClick={handleClose} sx={{ color: "#FF2E2E" }}>
+                <MenuItem
+                  onClick={() => {
+                    logout();
+                    handleClose();
+                  }}
+                  sx={{ color: "#FF2E2E" }}
+                >
                   Logout
                 </MenuItem>
-                {isAdmin ? (
+                {user.isAdmin ? (
                   <MenuItem onClick={handleClose}>Settings</MenuItem>
                 ) : (
                   <div></div>
@@ -85,14 +91,13 @@ function Layout() {
           )}
         </Toolbar>
       </AppBar>
-      <div style={{padding:'32px'}}>
-      {/* <Container maxWidth="xl">
+      <div style={{ padding: "32px" }}>
+        {/* <Container maxWidth="xl">
         <Box sx={{ height: "calc(100vh - 192px)", padding: "32px" }}> */}
-          <Outlet />
+        <Outlet />
         {/* </Box>
      </Container>   */}
-     </div>
-      
+      </div>
 
       <div
         style={{
@@ -104,7 +109,7 @@ function Layout() {
           position: "fixed",
           width: "100%",
           bottom: 0,
-          marginTop: "auto"
+          marginTop: "auto",
         }}
       >
         <Typography variant="h6" color="primary.contrastText">

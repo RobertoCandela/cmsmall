@@ -41,7 +41,7 @@ exports.getUser = (username, password) => {
       } else if (row === undefined) {
         resolve(false);
       } else {
-        const user = { id: row.id, username: row.email, name: row.name };
+        const user = { id: row.id, username: row.username, name: row.name, isAdmin : row.isadmin};
 
         crypto.scrypt(password, row.salt, 32, function (err, hashedPassword) {
           console.log("password: " + password);
@@ -65,7 +65,6 @@ exports.getUser = (username, password) => {
     });
   });
 };
-
 exports.getUserById = (user_id) => {
   return new Promise((resolve, reject) => {
     const sql = "SELECT * FROM users WHERE users.id = ?";
@@ -84,7 +83,7 @@ exports.getUserById = (user_id) => {
 const checkUniqueUser = (user) => {
   return new Promise((resolve, reject) => {
     const sql =
-      "SELECT * FROM users WHERE users.email = ? and users.username = ?";
+      "SELECT * FROM users WHERE users.email = ? or users.username = ?";
     db.get(sql, [user.email, user.username], (err, row) => {
       if (err) {
         reject(err);
@@ -150,7 +149,7 @@ exports.createUser = (user) => {
         } else {
           const err = {
             status: 400,
-            errorMessage: `User with username: ${user.username} and email ${user.email} already exists`,
+            errorMessage: `User with username: ${user.username} or email ${user.email} already exists`,
           };
           console.log(
             "User with username: " +

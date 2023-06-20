@@ -125,10 +125,6 @@ exports.modifyPage = (page) => {
 
           //check component already exists:
           const checkFlag = await checkBlockAlreadyExists(block.id)
-            .then((resp) => {
-              resolve(resp);
-            })
-            .catch((err) => console.log(err));
           console.log("PRINTING CHECK FLAG");
           console.log(checkFlag);
           if (!checkFlag) {

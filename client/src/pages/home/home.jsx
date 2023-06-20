@@ -4,6 +4,7 @@ import { getPages } from "../../service/page-service";
 import PageCard from "../../components/page-card";
 import Button from "@mui/material/Button";
 import { useNavigate } from "react-router-dom";
+import { getCurrentSession } from "../../service/auth-service";
 
 function Home() {
   const [dataList, setDataList] = useState([]);
@@ -18,6 +19,7 @@ function Home() {
   //viene fatto solo al primo render della pagina perchè le quadre sono vuote e non ci sono variabili che possono cambiare
   useEffect(() => {
     getPagesHandler();
+
   }, []);
 
   return (

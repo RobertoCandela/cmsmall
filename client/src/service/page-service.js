@@ -103,7 +103,7 @@ export const createBlock = async (block) => {
     const response = await fetch(url + "/blocks", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(page),
+      body: JSON.stringify(block),
     });
     if (response.status === 201) {
       return response.json();

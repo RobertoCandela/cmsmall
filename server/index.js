@@ -36,12 +36,16 @@ passport.deserializeUser(function (user, callback) {
 });
 
 app.use(express.json());
-app.use(cors());
+const corsOptions = {
+  origin: 'http://localhost:5173',
+  credentials: true,
+};
+app.use(cors(corsOptions));
 app.use(bodyParser.json());
 
 app.use(
   session({
-    secret: "shhhhh... it's a secret!",
+    secret: "3aBc9D1e8F2gH7jK",
     resave: false,
     saveUninitialized: false,
   })
@@ -52,7 +56,11 @@ app.use(passport.authenticate("session"));
 const errorFormatter = ({ location, msg, param, value, nestedErrors }) => {
   return `${location}[${param}]: ${msg}`;
 };
-
+app.delete('/sessions/current', (req, res) => {
+  req.logout(() => {
+    res.status(200).json({});
+  });
+});
 app.get("/sessions/current", (req, res) => {
   if (req.isAuthenticated()) {
     res.status(200).json(req.user);
