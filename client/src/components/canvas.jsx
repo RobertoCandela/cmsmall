@@ -13,6 +13,7 @@ import { Paragraph } from "./paragraph";
 import { Image } from "./image";
 
 import { HighlightOffRounded } from "@mui/icons-material";
+import Modal from "./modal";
 
 export function Canvas({ destinationItems, setDestinationItems }) {
   const [sourceItems, setSourceItems] = useState([
@@ -51,8 +52,8 @@ export function Canvas({ destinationItems, setDestinationItems }) {
       if (result.source.droppableId !== "destination") {
         updatedDestinationItems.splice(destinationIndex, 0, {
           id: uuidv4(),
-          content: '',
-          blockType: draggedItem.id
+          content: "",
+          blockType: draggedItem.id,
         });
       } else {
         const [removedItem] = updatedDestinationItems.splice(sourceIndex, 1);
@@ -63,34 +64,34 @@ export function Canvas({ destinationItems, setDestinationItems }) {
   };
 
   function discardItem(id) {
-    const aux = destinationItems.filter((i) => i.id != id);
-    setDestinationItems(aux);
+      const aux = destinationItems.filter((i) => i.id != id);
+      setDestinationItems(aux);
+    
   }
 
   function handleSelectedImage(path, item_id) {
     console.log("path: " + path);
 
     console.log("item_id: " + item_id);
-    const aux = [...destinationItems]
-    aux.forEach(e=>{
-      if(e.id===item_id){
-        e.content=path
+    const aux = [...destinationItems];
+    aux.forEach((e) => {
+      if (e.id === item_id) {
+        e.content = path;
       }
-    })
-    setDestinationItems(aux)
+    });
+    setDestinationItems(aux);
   }
-  function handleSelectedItem(content,item_id){
+  function handleSelectedItem(content, item_id) {
     console.log("content: " + content);
 
     console.log("item_id: " + item_id);
-    const aux = [...destinationItems]
-    aux.forEach(e=>{
-      if(e.id===item_id){
-        e.content=content
+    const aux = [...destinationItems];
+    aux.forEach((e) => {
+      if (e.id === item_id) {
+        e.content = content;
       }
-    })
-    setDestinationItems(aux)
-
+    });
+    setDestinationItems(aux);
   }
 
   function renderItem(item) {
@@ -100,7 +101,13 @@ export function Canvas({ destinationItems, setDestinationItems }) {
       case "h": {
         console.log("header");
         return (
-          <Header item={item} discardItem={() => discardItem(item.id)}  handleSelectedItem={(content)=>handleSelectedItem(content,item.id)}></Header>
+          <Header
+            item={item}
+            discardItem={() => discardItem(item.id)}
+            handleSelectedItem={(content) =>
+              handleSelectedItem(content, item.id)
+            }
+          ></Header>
         );
       }
       case "p": {
@@ -109,7 +116,9 @@ export function Canvas({ destinationItems, setDestinationItems }) {
           <Paragraph
             item={item}
             discardItem={() => discardItem(item.id)}
-            handleSelectedItem={(content)=>handleSelectedItem(content,item.id)}
+            handleSelectedItem={(content) =>
+              handleSelectedItem(content, item.id)
+            }
           ></Paragraph>
         );
       }

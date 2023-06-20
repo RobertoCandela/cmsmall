@@ -23,6 +23,7 @@ export function Header({ item, discardItem, handleSelectedItem }) {
         multiline
         fullWidth
         placeholder="Header"
+        value = {item.content}
         inputProps={{ style: { fontSize: "30px", fontWeight: "bold" } }}
         onChange={(e)=>handleSelectedItem(e.target.value)}
       ></TextField>

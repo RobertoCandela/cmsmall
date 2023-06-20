@@ -4,6 +4,7 @@ const PORT = 3000;
 const express = require("express");
 const userDao = require("./dao-users");
 const pageDao = require("./dao-pages");
+const blocksDao = require("./dao-blocks");
 const cors = require("cors");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
@@ -146,7 +147,40 @@ app.get("/pages/:id", (req, res) => {
     })
     .catch((err) => res.status(500).json(err));
 });
-
+app.put(
+  "/pages/:id",
+  [
+    check("title").isLength({ min: 1, max: 50 }).withMessage("invalid title"),
+    check("publication_date")
+      .optional()
+      .isDate({ format: "YYYY-MM-DD" })
+      .withMessage("invalid publication_date"),
+    check("blocks")
+      .isArray()
+      .notEmpty()
+      .custom((value) => {
+        const containsHeader = value.some((obj) => obj.blockType === "h");
+        if (!containsHeader) {
+          throw new Error("Almost one header is required!");
+        }
+        return true;
+      }),
+  ],
+  (req, res) => {
+    const page = {
+      id: req.params.id,
+      title: req.body.title,
+      publication_date: req.body.publication_date,
+      blocks: req.body.blocks,
+    };
+    pageDao
+      .modifyPage(page)
+      .then((resp) => {
+        return res.json(resp);
+      })
+      .catch((err) => res.status(500).json(err));
+  }
+);
 app.delete("/pages/:id", (req, res) => {
   pageDao
     .deletePage(req.params.id)
@@ -156,6 +190,14 @@ app.delete("/pages/:id", (req, res) => {
     .catch((err) => res.status(500).json(err));
 });
 
+app.delete("/blocks/:id", (req, res) => {
+  blocksDao
+    .deleteBlock(req.params.id)
+    .then((resp) => {
+      res.status(204).json(resp);
+    })
+    .catch((err) => res.status(500).json(err));
+});
 app.post(
   "/pages",
   [
@@ -171,9 +213,7 @@ app.post(
       .custom((value) => {
         const containsHeader = value.some((obj) => obj.blockType === "h");
         if (!containsHeader) {
-          throw new Error(
-            "Almost one header is required!"
-          );
+          throw new Error("Almost one header is required!");
         }
         return true;
       }),
@@ -195,7 +235,7 @@ app.post(
       title: req.body.title,
       author: req.body.author,
       publication_date: req.body.publication_date,
-      blocks : req.body.blocks
+      blocks: req.body.blocks,
     };
 
     pageDao

@@ -3,6 +3,7 @@
 const db = require("./db");
 const crypto = require("crypto");
 const { v4: uuidv4 } = require("uuid");
+const blocksDao = require('./dao-blocks')
 
 exports.getAllPages = () => {
   return new Promise((resolve, reject) => {
@@ -21,7 +22,8 @@ exports.getAllPages = () => {
 exports.getPage = (page_id) => {
   var pages = {};
   return new Promise((resolve, reject) => {
-    const sql = "SELECT pages.*, users.username FROM pages JOIN users ON pages.author = users.id WHERE pages.id = ?";
+    const sql =
+      "SELECT pages.*, users.username FROM pages JOIN users ON pages.author = users.id WHERE pages.id = ?";
     db.get(sql, [page_id], (err, row) => {
       if (err) {
         reject(err);
@@ -35,8 +37,6 @@ exports.getPage = (page_id) => {
             reject(err);
           } else {
             pages = { ...pages, blocks: blockRow };
-            console.log("print partial result");
-            console.log(pages);
             resolve(pages);
           }
         });
@@ -48,6 +48,8 @@ exports.getPage = (page_id) => {
 exports.deletePage = (page_id) => {
   return new Promise((resolve, reject) => {
     const sql = "DELETE FROM pages WHERE pages.id = ?";
+    // db.setForeignKeyConstraintsEnabled(true)
+    db.get("PRAGMA foreign_keys=ON");
     db.run(sql, [page_id], (err, row) => {
       if (err) {
         reject(err);
@@ -69,6 +71,129 @@ exports.getPageAuthor = () => {
       } else {
         console.log(row);
         resolve(row);
+      }
+    });
+  });
+};
+function checkBlockAlreadyExists(block_id) {
+  return new Promise((resolve, reject) => {
+    console.log("BLOCK_ID");
+    console.log(block_id);
+    const sql = "SELECT * FROM blocks WHERE blocks.id=?";
+
+    db.get(sql, [block_id], (err, row) => {
+      if (err) {
+        console.log("exception caught!!");
+        console.log(err);
+        reject(err);
+      } else {
+        console.log("the block is new ? ");
+        console.log("retrieved block...");
+        console.log(row);
+        console.log(row ? false : true);
+        resolve(row ? false : true);
+      }
+    });
+  });
+}
+exports.modifyPage = (page) => {
+  return new Promise((resolve, reject) => {
+    // db.run(sql, [film.title, film.favorite, film.watchDate, film.rating, film.user], function (err)
+    const id_page = page.id;
+
+    console.log("Updating with uuid: " + id_page);
+    console.log("printing payload...");
+    console.log(page);
+
+    const now = new Date().toISOString();
+
+    console.log("creationTime: " + now);
+
+    const sql =
+      "UPDATE pages SET title = ?, publication_date=? WHERE pages.id=?";
+    db.run(sql, [page.title, page.publication_date, page.id], (err) => {
+      if (err) {
+        reject(err);
+      } else {
+        // const orderedPageBlocks = page.blocks.sort((a, b) => a.item_order - b.item_order)
+        // console.log('====================')
+        // console.log('ordered page blocks')
+        // console.log(orderedPageBlocks)
+        page.blocks.forEach(async (block) => {
+          /*create pageblocks*/
+          //INSERT INTO blocks (id, name, type, contents, page_blocks, item_order)s
+
+          //check component already exists:
+          const checkFlag = await checkBlockAlreadyExists(block.id)
+            .then((resp) => {
+              resolve(resp);
+            })
+            .catch((err) => console.log(err));
+          console.log("PRINTING CHECK FLAG");
+          console.log(checkFlag);
+          if (!checkFlag) {
+            const sqlBlocks =
+              "UPDATE blocks SET content=?, item_order=? WHERE blocks.id=?";
+            db.run(
+              sqlBlocks,
+              [block.content, block.item_order, block.id],
+              (err, row) => {
+                console.log("DOING UPDATE ON ALREADY EXISTING ITEM");
+                if (err) {
+                  reject(err);
+                } else {
+                  resolve(row);
+                }
+              }
+            );
+          } else {
+            const sqlBlocks =
+              "INSERT INTO blocks (id, blockType, content, page_blocks, item_order) VALUES(?,?,?,?,?)";
+            db.run(
+              sqlBlocks,
+              [
+                block.id,
+                block.blockType,
+                block.content,
+                id_page,
+                block.item_order,
+              ],
+              (err, row) => {
+                if (err) {
+                  reject(err);
+                } else {
+                  resolve(row);
+                }
+              }
+            );
+          }
+        });
+
+        resolve(this.getPage(id_page));
+      }
+    });
+
+    const currentBlock = page.blocks;
+
+    const sqlGetAvailableBlocks =
+      "SELECT * FROM blocks WHERE blocks.page_blocks=?";
+
+    db.all(sqlGetAvailableBlocks, [page.id], (err, row) => {
+      if (err) {
+        console.log("exception caught!!");
+        console.log(err);
+      } else {
+        row.forEach((r) => {
+          if (!currentBlock.find((cb) => cb.id === r.id)) {
+            blocksDao.deleteBlock(r.id).then((resp)=>{
+              if(resp){
+                console.log("Block "+r.id+" deleted successfully")
+                resolve(resp)
+              }
+            }).catch(err=>console.log(err))
+          }
+        });
+        resolve(row)
       }
     });
   });

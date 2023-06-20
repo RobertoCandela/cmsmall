@@ -24,8 +24,6 @@ export function Image({ item, discardItem, handleSelectedImage }) {
   const handleClose = () => {
     setAnchorEl(null);
   };
-
-  console.log(item.content);
   return (
     <div
       style={{ position: "relative", padding: "16px" }}

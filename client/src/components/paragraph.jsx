@@ -28,6 +28,7 @@ export function Paragraph({ item, discardItem,handleSelectedItem }) {
         variant="standard"
         multiline
         fullWidth
+        value= {item.content}
         placeholder="Paragraph"
         onChange={(e)=>handleSelectedItem(e.target.value)}
       ></TextField>

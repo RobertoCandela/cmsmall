@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS blocks (
    content varchar(200) NOT NULL,
    page_blocks varchar (16) NOT NULL,
    item_order integer,
-   FOREIGN KEY (page_blocks) REFERENCES pages(id)
+   FOREIGN KEY (page_blocks) REFERENCES pages(id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS pages (
@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS pages (
    author varchar(50) NOT NULL,
    created_at varchar(20) NOT NULL,
    publication_date varchar(20),
-   FOREIGN KEY (author) REFERENCES users(uuid_user)
+   FOREIGN KEY (author) REFERENCES users(id)
 );
 
 

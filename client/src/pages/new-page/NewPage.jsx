@@ -1,18 +1,14 @@
 import {
   Button,
   ButtonGroup,
-  IconButton,
-  TextField,
-  Typography,
+  TextField
 } from "@mui/material";
 import { Canvas } from "../../components/canvas";
-import Layout from "../../components/layout";
 
 import { useState } from "react";
 import Modal from "../../components/modal";
 import KeyboardBackspaceRoundedIcon from "@mui/icons-material/KeyboardBackspaceRounded";
 import { useNavigate } from "react-router-dom";
-import moment from "moment";
 import { createPage } from "../../service/page-service";
 
 export function NewPage() {
@@ -24,7 +20,6 @@ export function NewPage() {
   const history = useNavigate();
 
   const handleDiscard = () => {
-    console.log(canvasItem);
     setCanvasItem([]);
     setPageName("");
     setPublishDate("");
@@ -41,8 +36,6 @@ export function NewPage() {
       blocks : canvasItem
     };
 
-    console.log("sending payload...");
-    console.log(page);
 
     createPage(page)
       .then((resp) => {
@@ -111,8 +104,6 @@ export function NewPage() {
         <Button
           variant="contained"
           onClick={() => {
-            console.log("payload from create Page");
-            console.log(canvasItem);
             savePage();
           }}
         >
