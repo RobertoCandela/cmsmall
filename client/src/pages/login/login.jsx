@@ -1,4 +1,5 @@
 import {
+  Alert,
   Button,
   Card,
   CardContent,
@@ -9,6 +10,7 @@ import {
   InputLabel,
   Link,
   OutlinedInput,
+  Snackbar,
   TextField,
   Typography,
 } from "@mui/material";
@@ -19,12 +21,14 @@ import "./Login.css";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { login } from "../../service/auth-service";
 
-function Login({login}) {
+function Login({ login }) {
   const history = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [showAlert, setShowAlert] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleUsernameChange = (e) => {
     setUsername(e.target.value);
@@ -38,13 +42,16 @@ function Login({login}) {
     e.preventDefault();
 
     const credentials = { username: username, password: password };
-    login(credentials).then(()=>{
-
-       
-        history('/')
-
-    }).catch((err)=>console.log(err))
-
+    login(credentials)
+      .then((resp) => {
+        console.log("credentiial then: +" + resp);
+      })
+      .catch((err) => {
+        console.log("Error caught ");
+        console.log(err);
+        setErrorMessage(err.error);
+        setShowAlert(true);
+      });
   };
 
   const handleMouseDownPassword = (event) => {
@@ -132,6 +139,25 @@ function Login({login}) {
           </form>
         </CardContent>
       </Card>
+      <Snackbar
+        open={showAlert}
+        autoHideDuration={6000}
+        onClose={() => {
+          setShowAlert(false);
+          setErrorMessage("");
+        }}
+      >
+        <Alert
+          severity="error"
+          onClose={() => {
+            setShowAlert(false);
+            setErrorMessage("");
+          }}
+          sx={{ width: "100%" }}
+        >
+          {errorMessage}
+        </Alert>
+      </Snackbar>
     </div>
   );
 }

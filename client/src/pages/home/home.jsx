@@ -6,7 +6,7 @@ import Button from "@mui/material/Button";
 import { useNavigate } from "react-router-dom";
 import { getCurrentSession } from "../../service/auth-service";
 
-function Home() {
+function Home({user,loggedIn}) {
   const [dataList, setDataList] = useState([]);
   const history = useNavigate();
 

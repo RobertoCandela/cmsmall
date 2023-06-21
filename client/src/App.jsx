@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
 import Layout from "./components/layout";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Home from "./pages/home/home";
@@ -99,13 +99,13 @@ function App() {
               <Layout isLogged={loggedIn} user={user} logout={handleLogout} />
             }
           >
-            <Route index element={<Home />} />
-            <Route path="/login" element={<Login login={handleLogin} />} />
-            <Route path="/signup" element={<Signup signup={handleSignup} />} />
-            <Route path="/modifyPage/:id" element={<ModifyPage />} />
+            <Route index element={<Home user={user} loggedIn={loggedIn}/>} />
+            <Route path="/login" element={!loggedIn?<Login login={handleLogin}/>:<Navigate replace to='/'/>} />
+            <Route path="/signup" element={!loggedIn?<Signup signup={handleSignup}/>:<Navigate replace to='/'/>} />
+            <Route path="/modifyPage/:id" element={loggedIn?<ModifyPage/>:<Navigate replace to='/login'/>} />
             <Route path="/page/:id" element={<Page />} />
-            <Route path="/page/new" element={<NewPage />} />
-            <Route path="/settings" element={<Settings />} />
+            <Route path="/page/new" element={loggedIn?<NewPage />:<Navigate replace to='/login'/>} />
+            <Route path="/settings" element={loggedIn&&user.isAdmin?<Settings />:<Navigate replace to='/login'/>} />
             <Route path="*" element={<NoMatch />}></Route>
           </Route>
         </Routes>

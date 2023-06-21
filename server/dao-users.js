@@ -41,7 +41,12 @@ exports.getUser = (username, password) => {
       } else if (row === undefined) {
         resolve(false);
       } else {
-        const user = { id: row.id, username: row.username, name: row.name, isAdmin : row.isadmin};
+        const user = {
+          id: row.id,
+          username: row.username,
+          name: row.name,
+          isAdmin: row.isadmin,
+        };
 
         crypto.scrypt(password, row.salt, 32, function (err, hashedPassword) {
           console.log("password: " + password);
@@ -132,7 +137,7 @@ exports.createUser = (user) => {
                   user.surname,
                   user.username,
                   user.email,
-                  derivedKey.toString('hex'),
+                  derivedKey.toString("hex"),
                   salt,
                   user.isAdmin,
                 ],
