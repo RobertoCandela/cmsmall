@@ -11,7 +11,12 @@ import Settings from "./pages/settings/settings";
 import NoMatch from "./pages/nomatch/nomatch";
 import { CssBaseline } from "@mui/material";
 import { NewPage } from "./pages/new-page/NewPage";
-import { getCurrentSession, login, logout } from "./service/auth-service";
+import {
+  getCurrentSession,
+  login,
+  logout,
+  signup,
+} from "./service/auth-service";
 
 const theme = createTheme({
   palette: {
@@ -33,18 +38,17 @@ const theme = createTheme({
 });
 
 function App() {
-
   const [loggedIn, setLoggedIn] = useState(false);
   const [user, setUser] = useState(undefined);
   const init = async () => {
-    try{
-    const user = await getCurrentSession();
+    try {
+      const user = await getCurrentSession();
 
-    if (user) {
-      setUser(user);
-      setLoggedIn(true);
-    } 
-  }catch(err) {
+      if (user) {
+        setUser(user);
+        setLoggedIn(true);
+      }
+    } catch (err) {
       setUser(undefined);
       setLoggedIn(false);
       console.log(err);
@@ -54,38 +58,50 @@ function App() {
     init();
   }, []);
 
-  const handleLogin = async (userCredentials)=>{
-
-    try{
-      const user = await login(userCredentials)
-      if(user){
-        setUser(user)
-        setLoggedIn(true)
+  const handleLogin = async (userCredentials) => {
+    try {
+      const user = await login(userCredentials);
+      if (user) {
+        setUser(user);
+        setLoggedIn(true);
       }
-    } catch(err){
+    } catch (err) {
       console.log(err);
       throw err;
     }
+  };
 
-  }
+  const handleLogout = async () => {
+    await logout();
+    setLoggedIn(false);
+    setUser(undefined);
+  };
 
-  const handleLogout = async() =>{
-
-    await logout()
-    setLoggedIn(false)
-    setUser(undefined)
-
-  }
+  const handleSignup = async (user) => {
+    try {
+      const newUser = await signup(user);
+      if(newUser){
+        handleLogin({username:newUser.username,password:newUser.password})
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Router>
         <Routes>
-          <Route path="/" element={<Layout isLogged={loggedIn} user={user} logout={handleLogout}/>}>
+          <Route
+            path="/"
+            element={
+              <Layout isLogged={loggedIn} user={user} logout={handleLogout} />
+            }
+          >
             <Route index element={<Home />} />
-            <Route path="/login" element={<Login login={handleLogin}/>} />
-            <Route path="/signup" element={<Signup />} />
+            <Route path="/login" element={<Login login={handleLogin} />} />
+            <Route path="/signup" element={<Signup signup={handleSignup} />} />
             <Route path="/modifyPage/:id" element={<ModifyPage />} />
             <Route path="/page/:id" element={<Page />} />
             <Route path="/page/new" element={<NewPage />} />
