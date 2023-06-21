@@ -91,12 +91,14 @@ app.post(
       .withMessage("password not strong enough"),
   ],
   (req, res) => {
+    console.log("printing req...")
+    console.log(req);
     const errors = validationResult(req).formatWith(errorFormatter); // format error message
     if (!errors.isEmpty()) {
       return res.status(422).json({ error: errors.array().join(", ") }); // error message is a single string with all error joined together
     }
     //validazione
-    console.log(req.body);
+
     //   if (!req.body.name || !req.body.email) {
     //     return res.status(400).json({ error: "Name and email are required" });
     //   }
@@ -273,6 +275,39 @@ app.post("/sessions", function (req, res, next) {
     });
   })(req, res, next);
 });
+
+app.post("/signup", async function (req, res, next) {
+  try {
+    const newUser = await userDao.createUser({
+      name: req.body.name,
+      surname: req.body.surname,
+      username: req.body.username,
+      email: req.body.email,
+      password: req.body.password,
+      isAdmin: `${req.body.isAdmin}`,
+    })
+    if (newUser) {
+      passport.authenticate("local", (err, user, info) => {
+        if (err) return next(err);
+        if (!user) {
+          // display wrong login messages
+          return res.status(401).json({ error: info });
+        }
+        // success, perform the login and extablish a login session
+        req.login(user, (err) => {
+          if (err) return next(err);
+
+          // req.user contains the authenticated user, we send all the user info back
+          // this is coming from userDao.getUser() in LocalStratecy Verify Fn
+          return res.json(req.user);
+        });
+      })(req, res, next);
+    }
+  } catch (err) {
+    return res.status(err.status).json(err)
+  }
+});
+
 
 // GET /api/sessions/current
 // This route checks whether the user is logged in or not.

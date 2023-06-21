@@ -1,17 +1,41 @@
 const url = "http://localhost:3000";
 
-export const login = async (user) => {
-  console.log("login attempt of user " + user);
+function getJson(httpResponsePromise) {
+  // server API always return JSON, in case of error the format is the following { error: <message> } 
+  return new Promise((resolve, reject) => {
+    httpResponsePromise
+      .then((response) => {
+        if (response.ok) {
 
-  const response = await fetch(url + "/sessions", {
-    method: "POST",
-    credentials: "include",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(user),
+         // the server always returns a JSON, even empty {}. Never null or non json, otherwise the method will fail
+         response.json()
+            .then( json => resolve(json) )
+            .catch( err => reject({ error: "Cannot parse server response" }))
+
+        } else {
+          // analyzing the cause of error
+          response.json()
+            .then(obj => 
+              reject(obj)
+              ) // error msg in the response body
+            .catch(err => reject({ error: "Cannot parse server response" })) // something else
+        }
+      })
+      .catch(err => 
+        reject({ error: "Cannot communicate"  })
+      ) // connection error
   });
-
-  console.log("printing json from service: "+response.json())
-  return response.json();
+}
+export const login = async (user) => {
+  return getJson(fetch(url + '/sessions', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    credentials: 'include',  // this parameter specifies that authentication cookie must be forwared
+    body: JSON.stringify(user),
+  })
+  )
 };
 
 export const getCurrentSession = async () => {
@@ -30,21 +54,17 @@ export const getCurrentSession = async () => {
 };
 
 export const signup = async (user) => {
-  console.log("signup user: ");
-  console.log(user);
-
-  try {
-    const response = await fetch(url + "/users", {
+  console.log("sign up user with object: ")
+  console.log(user)
+  
+    return getJson(fetch(url + "/signup", {
       method: "POST",
+      headers: {
+        'Content-Type': 'application/json',
+      },
       body: JSON.stringify(user),
-    });
-    if (response.status === 204) {
-      return response.json();
-    }
-  } catch (err) {
-    console.log(err);
-    throw err;
-  }
+    }));
+  
 };
 
 export const logout = async () => {

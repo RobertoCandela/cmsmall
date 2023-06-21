@@ -1,4 +1,5 @@
 import {
+  Alert,
   Button,
   Card,
   CardContent,
@@ -9,6 +10,7 @@ import {
   InputLabel,
   Link,
   OutlinedInput,
+  Snackbar,
   TextField,
   Typography,
 } from "@mui/material";
@@ -28,6 +30,8 @@ function Signup({signup}) {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [showAlert, setShowAlert] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleFirstNameChange = (e) => {
     setFirstName(e.target.value);
@@ -72,6 +76,15 @@ function Signup({signup}) {
     };
 
     signup(user)
+    .then(() => {
+      history('/')
+    })
+    .catch((err) => {
+      console.log("Error caught ");
+      console.log(err);
+      setErrorMessage(err.errorMessage);
+      setShowAlert(true);
+    });
   };
 
   const handleMouseDownPassword = (event) => {
@@ -80,6 +93,27 @@ function Signup({signup}) {
 
   return (
     <div className="signup">
+         <Snackbar
+        open={showAlert}
+        autoHideDuration={6000}
+        onClose={() => {
+          setShowAlert(false);
+          setErrorMessage("");
+        }}
+        anchorOrigin = {{vertical:'top',horizontal:'center'}}
+        sx={{marginTop:'64px'}}
+      >
+        <Alert
+          severity="error"
+          onClose={() => {
+            setShowAlert(false);
+            setErrorMessage("");
+          }}
+          sx={{ width: "100%" }}
+        >
+          {errorMessage}
+        </Alert>
+      </Snackbar>
       <Card className="card">
         <CardContent>
           <Typography

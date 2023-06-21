@@ -80,11 +80,17 @@ function App() {
   const handleSignup = async (user) => {
     try {
       const newUser = await signup(user);
+      console.log("newUser value")
+      console.log(newUser)
       if(newUser){
+        setUser(user)
+        setLoggedIn(true)
+      
         handleLogin({username:newUser.username,password:newUser.password})
       }
     } catch (err) {
       console.log(err);
+      throw err;
     }
   };
 

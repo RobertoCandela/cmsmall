@@ -43,8 +43,8 @@ function Login({ login }) {
 
     const credentials = { username: username, password: password };
     login(credentials)
-      .then((resp) => {
-        console.log("credentiial then: +" + resp);
+      .then(() => {
+        history('/')
       })
       .catch((err) => {
         console.log("Error caught ");
@@ -60,6 +60,27 @@ function Login({ login }) {
 
   return (
     <div className="login">
+       <Snackbar
+        open={showAlert}
+        autoHideDuration={6000}
+        onClose={() => {
+          setShowAlert(false);
+          setErrorMessage("");
+        }}
+        anchorOrigin = {{vertical:'top',horizontal:'center'}}
+        sx={{marginTop:'64px'}}
+      >
+        <Alert
+          severity="error"
+          onClose={() => {
+            setShowAlert(false);
+            setErrorMessage("");
+          }}
+          sx={{ width: "100%" }}
+        >
+          {errorMessage}
+        </Alert>
+      </Snackbar>
       <Card className="card">
         <CardContent>
           <Typography
@@ -139,25 +160,6 @@ function Login({ login }) {
           </form>
         </CardContent>
       </Card>
-      <Snackbar
-        open={showAlert}
-        autoHideDuration={6000}
-        onClose={() => {
-          setShowAlert(false);
-          setErrorMessage("");
-        }}
-      >
-        <Alert
-          severity="error"
-          onClose={() => {
-            setShowAlert(false);
-            setErrorMessage("");
-          }}
-          sx={{ width: "100%" }}
-        >
-          {errorMessage}
-        </Alert>
-      </Snackbar>
     </div>
   );
 }
