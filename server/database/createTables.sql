@@ -27,8 +27,8 @@ CREATE TABLE IF NOT EXISTS pages (
    id varchar(36) PRIMARY KEY,
    title varchar(50) NOT NULL,
    author varchar(50) NOT NULL,
-   created_at varchar(20) NOT NULL,
-   publication_date varchar(20),
+   created_at varchar(20) DATE,
+   publication_date DATE,
    FOREIGN KEY (author) REFERENCES users(id)
 );
 

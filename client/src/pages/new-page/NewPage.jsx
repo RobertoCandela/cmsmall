@@ -34,7 +34,7 @@ export function NewPage() {
 
     const page = {
       title: pageName,
-      author: "ea148da9-1ed9-4e78-904e-462ab9c72e41",
+      author: user.id,
       created_at: new Date().toISOString(),
       publication_date: publishDate,
       blocks : canvasItem

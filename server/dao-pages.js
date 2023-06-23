@@ -14,7 +14,7 @@ exports.getAllPages = (session) => {
 
     //Se la sessione è valida e in oltre l'utente loggato è admin deve poter cancellare e modificare qualsiasi pagina, e inoltre avere la possibilità di cambiare l'autore di una pagina.
     const sql =
-      "SELECT pages.*, users.username FROM pages JOIN users ON pages.author = users.id";
+      "SELECT pages.*, users.username FROM pages JOIN users ON pages.author = users.id ORDER BY pages.publication_date";
     db.all(sql, (err, row) => {
       if (err) {
         reject(err);

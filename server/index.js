@@ -175,7 +175,9 @@ app.put(
         const containsHeader = value.some((obj) => obj.blockType === "h"&&!(obj.content===''));
         const containsParagraph = value.some((obj) => obj.blockType === "p"&&!(obj.content===''));
         const containsImage = value.some((obj) => obj.blockType === "img"&&!(obj.content===''));
-        if (containsHeader && (containsParagraph || containsImage)) {
+        const containsImageContent = value.some((obj) => obj.blockType === "img" && obj.content !== '');
+
+        if (containsHeader && (containsParagraph || containsImage) && containsImageContent) {
           return true;
         }
         return false;
@@ -241,7 +243,16 @@ app.post(
         const containsHeader = value.some((obj) => obj.blockType === "h"&&!(obj.content===''));
         const containsParagraph = value.some((obj) => obj.blockType === "p"&&!(obj.content===''));
         const containsImage = value.some((obj) => obj.blockType === "img"&&!(obj.content===''));
-        if (containsHeader && (containsParagraph || containsImage)) {
+        const containsImageContent = value.some((obj) => obj.blockType === "img" && obj.content !== '');
+
+        console.log(containsHeader)
+        console.log(containsParagraph)
+        console.log(containsImage)
+        console.log(containsImageContent)
+
+        //check if image exists the content must be populated
+        console.log(containsHeader && (containsParagraph || containsImage) && containsImageContent)
+        if (containsHeader && (containsParagraph || containsImage) && containsImageContent) {
           return true;
         }
         return false;
