@@ -3,7 +3,7 @@ import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import Button from "@mui/material/Button";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
@@ -12,13 +12,15 @@ import Container from "@mui/material/Container";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useTheme } from "@mui/material/styles";
 import { getCurrentSession } from "../service/auth-service";
+import userContext from "../userContext";
 
-function Layout({ isLogged, user, logout }) {
+function Layout({ isLogged, logout }) {
   // useState(false) inizializza lo stato della variabile isLogged
   
   const [anchorEl, setAnchorEl] = useState(null);
   const [appName, setAppName] = useState("CMSmall");
   const navigate = useNavigate();
+  const user = useContext(userContext);
 
   const theme = useTheme();
 

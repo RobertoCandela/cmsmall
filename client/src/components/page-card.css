@@ -1,8 +1,22 @@
 .theme {
-  --bg-color: #6F9BD9;
+  --bg-color: #6f9bd9;
   --bg-color-light: #91afd8;
   --text-color-hover: #e1edfd;
   --box-shadow-color: rgba(111, 155, 217, 0.48);
+}
+
+.box {
+  position: relative;
+}
+
+.box:hover > .ribbon-top-left::before {
+  top: -4px;
+  transition: all 0.3s ease-out;
+}
+
+.box:hover > .ribbon-top-left::after {
+  /* left: -1px; */
+  transition: all 0.3s ease-out;
 }
 
 .card {
@@ -22,7 +36,61 @@
   padding: 10px;
 }
 
-.card:hover {
+.ribbon {
+  width: 150px;
+  height: 150px;
+  overflow: hidden;
+  position: absolute;
+  z-index: 2;
+}
+.ribbon::before,
+.ribbon::after {
+  position: absolute;
+  z-index: -1;
+  content: "";
+  display: block;
+  border: 5px solid #1A2433;
+}
+.ribbon span {
+  position: absolute;
+  display: block;
+  width: 225px;
+  padding: 15px 0;
+  background-color: #27374D;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+  color: #fff;
+  font: 700 18px/1 "Lato", sans-serif;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.ribbon-top-left {
+  top: -10px;
+  left: -10px;
+}
+.ribbon-top-left::before,
+.ribbon-top-left::after {
+  border-top-color: transparent;
+  border-left-color: transparent;
+}
+.ribbon-top-left::before {
+  top: 0;
+  right: 0;
+  transition: all 0.3s ease-out;
+}
+.ribbon-top-left::after {
+  bottom: 0;
+  left: 0;
+  transition: all 0.3s ease-out;
+}
+.ribbon-top-left span {
+  right: -25px;
+  top: 30px;
+  transform: rotate(-45deg);
+}
+
+.box:hover > .card {
   transform: translateY(-5px) scale(1.005) translateZ(0);
   box-shadow: 0 24px 36px rgba(0, 0, 0, 0.11),
     0 24px 46px var(--box-shadow-color);

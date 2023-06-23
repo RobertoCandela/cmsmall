@@ -1,14 +1,17 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import "./home.css";
 import { getPages } from "../../service/page-service";
 import PageCard from "../../components/page-card";
 import Button from "@mui/material/Button";
 import { useNavigate } from "react-router-dom";
 import { getCurrentSession } from "../../service/auth-service";
+import userContext from "../../userContext";
 
-function Home({user,loggedIn}) {
+function Home({loggedIn}) {
   const [dataList, setDataList] = useState([]);
   const history = useNavigate();
+
+  const user = useContext(userContext);
 
   const getPagesHandler = async () => {
     getPages().then((resp) => {
@@ -41,11 +44,11 @@ function Home({user,loggedIn}) {
             ></PageCard>
           ))}
       </div>
-      <Button variant="contained" sx={{ marginTop: "30px", maxWidth: "190px" }} onClick={()=>{
+      {user&&<Button variant="contained" sx={{ marginTop: "30px", maxWidth: "190px" }} onClick={()=>{
         history('/page/new')
       }}>
         Create New Page
-      </Button>
+      </Button>}
     </div>
   );
 }

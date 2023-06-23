@@ -5,17 +5,21 @@ import {
 } from "@mui/material";
 import { Canvas } from "../../components/canvas";
 
-import { useState } from "react";
+import { useContext, useState } from "react";
 import Modal from "../../components/modal";
 import KeyboardBackspaceRoundedIcon from "@mui/icons-material/KeyboardBackspaceRounded";
 import { useNavigate } from "react-router-dom";
 import { createPage } from "../../service/page-service";
+import { useSnackbar } from "notistack";
+import userContext from "../../userContext";
 
 export function NewPage() {
   const [pageName, setPageName] = useState("");
   const [publishDate, setPublishDate] = useState("");
   const [open, setOpen] = useState(false);
   const [canvasItem, setCanvasItem] = useState([]);
+  const { enqueueSnackbar } = useSnackbar();
+  const user = useContext(userContext);
 
   const history = useNavigate();
 
@@ -44,7 +48,11 @@ export function NewPage() {
         }
       })
       .catch((err) => {
-        console.log(err);
+        const errorMessage = Array.from(err.errors.errors)
+        errorMessage.forEach(err=>{
+          console.log(err)
+          enqueueSnackbar(err.msg,{variant:'error'})
+        })
       });
   }
   return (

@@ -37,7 +37,7 @@ passport.deserializeUser(function (user, callback) {
 
 app.use(express.json());
 const corsOptions = {
-  origin: 'http://localhost:5173',
+  origin: "http://localhost:5173",
   credentials: true,
 };
 app.use(cors(corsOptions));
@@ -56,7 +56,7 @@ app.use(passport.authenticate("session"));
 const errorFormatter = ({ location, msg, param, value, nestedErrors }) => {
   return `${location}[${param}]: ${msg}`;
 };
-app.delete('/sessions/current', (req, res) => {
+app.delete("/sessions/current", (req, res) => {
   req.logout(() => {
     res.status(200).json({});
   });
@@ -91,7 +91,7 @@ app.post(
       .withMessage("password not strong enough"),
   ],
   (req, res) => {
-    console.log("printing req...")
+    console.log("printing req...");
     console.log(req);
     const errors = validationResult(req).formatWith(errorFormatter); // format error message
     if (!errors.isEmpty()) {
@@ -160,23 +160,35 @@ app.get("/pages/:id", (req, res) => {
 app.put(
   "/pages/:id",
   [
-    check("title").isLength({ min: 1, max: 50 }).withMessage("invalid title"),
+    check("title")
+      .isLength({ min: 1, max: 50 })
+      .withMessage("Invalid title, the title must be at most 50 characters"),
     check("publication_date")
       .optional()
       .isDate({ format: "YYYY-MM-DD" })
-      .withMessage("invalid publication_date"),
+      .withMessage("Invalid publication date"),
     check("blocks")
       .isArray()
       .notEmpty()
       .custom((value) => {
-        const containsHeader = value.some((obj) => obj.blockType === "h");
-        if (!containsHeader) {
-          throw new Error("Almost one header is required!");
+        //console.log(value)
+        const containsHeader = value.some((obj) => obj.blockType === "h"&&!(obj.content===''));
+        const containsParagraph = value.some((obj) => obj.blockType === "p"&&!(obj.content===''));
+        const containsImage = value.some((obj) => obj.blockType === "img"&&!(obj.content===''));
+        if (containsHeader && (containsParagraph || containsImage)) {
+          return true;
         }
-        return true;
-      }),
+        return false;
+      })
+      .withMessage(
+        "The page must contains at least one header, one image and one paragraph with some content"
+      ),
   ],
   (req, res) => {
+    const errors = validationResult(req).formatWith(errorFormatter); // format error message
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ errors }); // error message is a single string with all error joined together
+    }
     const page = {
       id: req.params.id,
       title: req.body.title,
@@ -211,30 +223,37 @@ app.delete("/blocks/:id", (req, res) => {
 app.post(
   "/pages",
   [
-    check("title").isLength({ min: 1, max: 50 }).withMessage("invalid title"),
-    check("author").isLength({ min: 1, max: 50 }).withMessage("invalid author"),
+    check("title")
+      .isLength({ min: 1, max: 50 })
+      .withMessage("Invalid title, the title must be at most 50 characters"),
+    check("author")
+      .isLength({ min: 1, max: 50 })
+      .withMessage("Invalid author, the author must be at most 50 characters"),
     check("publication_date")
       .optional()
       .isDate({ format: "YYYY-MM-DD" })
-      .withMessage("invalid publication_date"),
+      .withMessage("invalid Publication date"),
     check("blocks")
       .isArray()
       .notEmpty()
       .custom((value) => {
-        const containsHeader = value.some((obj) => obj.blockType === "h");
-        if (!containsHeader) {
-          throw new Error("Almost one header is required!");
+        console.log(value)
+        const containsHeader = value.some((obj) => obj.blockType === "h"&&!(obj.content===''));
+        const containsParagraph = value.some((obj) => obj.blockType === "p"&&!(obj.content===''));
+        const containsImage = value.some((obj) => obj.blockType === "img"&&!(obj.content===''));
+        if (containsHeader && (containsParagraph || containsImage)) {
+          return true;
         }
-        return true;
-      }),
+        return false;
+      })
+      .withMessage(
+        "The page must contains at least one header, one image and one paragraph with some content"
+      ),
   ],
   (req, res) => {
     const errors = validationResult(req).formatWith(errorFormatter); // format error message
-    console.log(req.body);
-    console.log("errors..");
-    console.log(errors);
     if (!errors.isEmpty()) {
-      return res.status(422).json({ error: errors.array().join(", ") }); // error message is a single string with all error joined together
+      return res.status(422).json({ errors }); // error message is a single string with all error joined together
     }
     //validazione
     console.log(req.body);
@@ -285,7 +304,7 @@ app.post("/signup", async function (req, res, next) {
       email: req.body.email,
       password: req.body.password,
       isAdmin: `${req.body.isAdmin}`,
-    })
+    });
     if (newUser) {
       passport.authenticate("local", (err, user, info) => {
         if (err) return next(err);
@@ -304,10 +323,9 @@ app.post("/signup", async function (req, res, next) {
       })(req, res, next);
     }
   } catch (err) {
-    return res.status(err.status).json(err)
+    return res.status(err.status).json(err);
   }
 });
-
 
 // GET /api/sessions/current
 // This route checks whether the user is logged in or not.

@@ -6,6 +6,7 @@ import Modal from "../../components/modal";
 import KeyboardBackspaceRoundedIcon from "@mui/icons-material/KeyboardBackspaceRounded";
 import { useNavigate, useParams } from "react-router-dom";
 import { createPage, getPage, updatePage } from "../../service/page-service";
+import { enqueueSnackbar } from "notistack";
 
 function ModifyPage() {
   const [pageName, setPageName] = useState("");
@@ -48,7 +49,11 @@ function ModifyPage() {
         }
       })
       .catch((err) => {
-        console.log(err);
+        const errorMessage = Array.from(err.errors.errors)
+        errorMessage.forEach(err=>{
+          console.log(err)
+          enqueueSnackbar(err.msg,{variant:'error'})
+        })
       });
        
   }

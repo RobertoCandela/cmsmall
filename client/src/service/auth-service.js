@@ -39,24 +39,14 @@ export const login = async (user) => {
 };
 
 export const getCurrentSession = async () => {
-  console.log("getting current session...");
-  try {
-    const response = await fetch(url + "/sessions/current", {
+
+    return getJson(fetch(url + "/sessions/current", {
       credentials: "include",
-    });
-    if (response.status === 200) {
-      return response.json();
-    }
-  } catch (err) {
-    console.log(err);
-    throw err;
-  }
+    }));
+    
 };
 
 export const signup = async (user) => {
-  console.log("sign up user with object: ")
-  console.log(user)
-  
     return getJson(fetch(url + "/signup", {
       method: "POST",
       headers: {
@@ -68,10 +58,8 @@ export const signup = async (user) => {
 };
 
 export const logout = async () => {
-  const response = await fetch(url + "/sessions/current", {
+  return getJson(fetch(url + "/sessions/current", {
     method: "DELETE",
     credentials: "include", // this parameter specifies that authentication cookie must be forwared
-  });
-
-  return response;
+  }));
 };

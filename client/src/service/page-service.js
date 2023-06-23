@@ -1,26 +1,31 @@
 const url = "http://localhost:3000";
-
+function getJson(httpResponsePromise) {
+  // server API always return JSON, in case of error the format is the following { error: <message> }
+  return new Promise((resolve, reject) => {
+    httpResponsePromise
+      .then((response) => {
+        if (response.ok) {
+          // the server always returns a JSON, even empty {}. Never null or non json, otherwise the method will fail
+          response
+            .json()
+            .then((json) => resolve(json))
+            .catch((err) => reject({ error: "Cannot parse server response" }));
+        } else {
+          // analyzing the cause of error
+          response
+            .json()
+            .then((obj) => reject(obj)) // error msg in the response body
+            .catch((err) => reject({ error: "Cannot parse server response" })); // something else
+        }
+      })
+      .catch((err) => reject({ error: "Cannot communicate" })); // connection error
+  });
+}
 export const getPages = async () => {
-  try {
-    const response = await fetch(url + "/pages");
-    if (response.status === 200) {
-      return response.json();
-    }
-  } catch (err) {
-    console.log(err);
-    throw err;
-  }
+  return getJson(fetch(url + "/pages"));
 };
 export const getPage = async (page_id) => {
-  try {
-    const response = await fetch(url + `/pages/${page_id}`);
-    if (response.status === 200) {
-      return response.json();
-    }
-  } catch (err) {
-    console.log(err);
-    throw err;
-  }
+  return getJson(fetch(url + `/pages/${page_id}`));
 };
 export const deletePage = async (pageId) => {
   try {
@@ -37,79 +42,42 @@ export const deletePage = async (pageId) => {
 };
 
 export const createPage = async (page) => {
-  console.log("actual page...");
-  console.log(page);
-  console.log("actual body...");
-  console.log(JSON.stringify(page));
-  try {
-    const response = await fetch(url + "/pages", {
+  return getJson(
+    fetch(url + "/pages", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(page),
-    });
-    if (response.status === 201) {
-      return response.json();
-    }
-  } catch (err) {
-    console.log(err);
-    throw err;
-  }
+    })
+  );
 };
 
 export const updatePage = async (page) => {
-  console.log("updating page with id " + page.id);
-  console.log(page);
-  console.log("actual body...");
-  console.log(JSON.stringify(page));
-
   page.blocks.forEach((block, index) => {
     block.item_order = index;
   });
-  try {
-    const response = await fetch(url + `/pages/${page.id}`, {
+  return getJson(
+    fetch(url + `/pages/${page.id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(page),
-    });
-    if (response.status === 200) {
-      return response.json();
-    }
-  } catch (err) {
-    console.log(err);
-    throw err;
-  }
+    })
+  );
 };
 
-export const deleteComponent = async(id) =>{
-
-  try {
-    const response = await fetch(url + `/blocks/${id}`, {
+export const deleteComponent = async (id) => {
+  return getJson(
+    fetch(url + `/blocks/${id}`, {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
-    });
-    if (response.status === 204) {
-      return response.json();
-    }
-  } catch (err) {
-    console.log(err);
-    throw err;
-  }
-
-}
+    })
+  );
+};
 export const createBlock = async (block) => {
-  console.log("Saving block..." + block.id);
-
-  try {
-    const response = await fetch(url + "/blocks", {
+  return getJson(
+    fetch(url + "/blocks", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(block),
-    });
-    if (response.status === 201) {
-      return response.json();
-    }
-  } catch (err) {
-    console.log(err);
-    throw err;
-  }
+    })
+  );
 };
