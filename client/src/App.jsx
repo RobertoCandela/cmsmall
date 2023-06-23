@@ -78,8 +78,11 @@ function App() {
     try {
       const user = await login(userCredentials);
       if (user) {
+        console.log("setting loggedin...")
         setUser(user);
         setLoggedIn(true);
+      }else{
+        console.log("user is not valid")
       }
     } catch (err) {
       console.log(err);
@@ -99,17 +102,16 @@ function App() {
       console.log("newUser value");
       console.log(newUser);
       if (newUser) {
-        setUser(user);
+        setUser(newUser);
         setLoggedIn(true);
 
-        handleLogin({ username: newUser.username, password: newUser.password });
+        //handleLogin({ username: newUser.username, password: newUser.password });
       }
     } catch (err) {
       console.log(err);
       throw err;
     }
   };
-
   return (
     <ThemeProvider theme={theme}>
       <SnackbarProvider

@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS users (
    email varchar(20) NOT NULL,
    password varchar(64) NOT NULL,
    salt varchar(100) NOT NULL,
-   isadmin integer DEFAULT 0
+   isAdmin integer DEFAULT 0
 );
 
 CREATE TABLE IF NOT EXISTS blocks (
@@ -27,16 +27,16 @@ CREATE TABLE IF NOT EXISTS pages (
    id varchar(36) PRIMARY KEY,
    title varchar(50) NOT NULL,
    author varchar(50) NOT NULL,
-   created_at varchar(20) DATE,
-   publication_date DATE,
+   created_at TEXT,
+   publication_date TEXT,
    FOREIGN KEY (author) REFERENCES users(id)
 );
 
 
-INSERT INTO users (id, name, surname, username, email, password, salt, isadmin)
+INSERT INTO users (id, name, surname, username, email, password, salt, isAdmin)
 VALUES ('4aeb3f9c-4916-437d-bc5a-4f5d1e2c383a', 'admin', '', '', '', 'admin','3ab8127fe9856dc2a3c06f920dc9d15e', 1);
 
-INSERT INTO users (id, name, surname, username, email, password, salt, isadmin)
+INSERT INTO users (id, name, surname, username, email, password, salt, isAdmin)
 VALUES ('ea148da9-1ed9-4e78-904e-462ab9c72e41', 'roberto', 'candela', 'rcandela','roberto.candela@studenti.polito.it', 'roberto123','8f5b2c9a41e036d9047e1730c60d8ba7', 0);
 
 INSERT INTO pages (id, title, author, created_at, publication_date)

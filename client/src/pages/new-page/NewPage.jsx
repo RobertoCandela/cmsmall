@@ -1,8 +1,4 @@
-import {
-  Button,
-  ButtonGroup,
-  TextField
-} from "@mui/material";
+import { Button, ButtonGroup, TextField } from "@mui/material";
 import { Canvas } from "../../components/canvas";
 
 import { useContext, useState } from "react";
@@ -30,16 +26,18 @@ export function NewPage() {
   };
 
   function savePage() {
-      //INSERT INTO blocks (id, name, type, contents, page_blocks, item_order)
+    //INSERT INTO blocks (id, name, type, contents, page_blocks, item_order)
+
+    console.log("userFromContext");
+    console.log(user);
 
     const page = {
       title: pageName,
       author: user.id,
       created_at: new Date().toISOString(),
       publication_date: publishDate,
-      blocks : canvasItem
+      blocks: canvasItem,
     };
-
 
     createPage(page)
       .then((resp) => {
@@ -48,11 +46,11 @@ export function NewPage() {
         }
       })
       .catch((err) => {
-        const errorMessage = Array.from(err.errors.errors)
-        errorMessage.forEach(err=>{
-          console.log(err)
-          enqueueSnackbar(err.msg,{variant:'error'})
-        })
+        const errorMessage = Array.from(err.errors.errors);
+        errorMessage.forEach((err) => {
+          console.log(err);
+          enqueueSnackbar(err.msg, { variant: "error" });
+        });
       });
   }
   return (
