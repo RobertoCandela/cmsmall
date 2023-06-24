@@ -8,12 +8,14 @@ import { useNavigate } from "react-router-dom";
 import { createPage } from "../../service/page-service";
 import { useSnackbar } from "notistack";
 import userContext from "../../userContext";
+import ComboBox from "../../components/combobox";
 
 export function NewPage() {
   const [pageName, setPageName] = useState("");
   const [publishDate, setPublishDate] = useState("");
   const [open, setOpen] = useState(false);
   const [canvasItem, setCanvasItem] = useState([]);
+  const [assignedUser,setAssignedUser] = useState(undefined)
   const { enqueueSnackbar } = useSnackbar();
   const user = useContext(userContext);
 
@@ -53,6 +55,9 @@ export function NewPage() {
         });
       });
   }
+
+  console.log(assignedUser)
+  console.log(user)
   return (
     <>
       <Button
@@ -69,7 +74,7 @@ export function NewPage() {
           display: "flex",
           flexDirection: "row",
           justifyContent: "center",
-          paddingBottom: "60px",
+          paddingBottom: "20px",
         }}
       >
         <TextField
@@ -92,8 +97,9 @@ export function NewPage() {
           InputLabelProps={{
             shrink: true,
           }}
-          sx={{ marginLeft: "10px" }}
+          sx={{ marginLeft: "10px",marginRight:"10px" }}
         />
+        {user.isAdmin===1&&<ComboBox assignedUser={assignedUser} setAssignedUser={setAssignedUser}/>}
       </div>
       <Canvas
         destinationItems={canvasItem}

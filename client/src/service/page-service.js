@@ -22,7 +22,9 @@ function getJson(httpResponsePromise) {
   });
 }
 export const getPages = async () => {
-  return getJson(fetch(url + "/pages"));
+  return getJson(fetch(url + "/pages",{
+    credentials:'include'
+  }));
 };
 export const getPage = async (page_id) => {
   return getJson(fetch(url + `/pages/${page_id}`));

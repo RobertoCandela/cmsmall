@@ -73,7 +73,7 @@ function Signup({signup}) {
       username: username,
       email: email,
       password: password,
-      isadmin:0
+      isAdmin:0
     };
 
     signup(user)

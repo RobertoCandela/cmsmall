@@ -60,6 +60,8 @@ function App() {
     try {
       const user = await getCurrentSession();
 
+      console.log(user)
+
       if (user) {
         setUser(user);
         setLoggedIn(true);

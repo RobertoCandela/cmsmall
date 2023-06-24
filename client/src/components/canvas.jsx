@@ -168,7 +168,7 @@ export function Canvas({ destinationItems, setDestinationItems }) {
                     backgroundColor: "#C8CBCF",
                   }}
                 >
-                  Drag here components
+                  Drop here components
                 </div>
               ) : (
                 destinationItems.map((item, index) => (

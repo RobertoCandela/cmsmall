@@ -45,8 +45,11 @@ exports.getUser = (username, password) => {
           id: row.id,
           username: row.username,
           name: row.name,
-          isAdmin: row.isadmin,
+          isAdmin: row.isAdmin,
         };
+
+        console.log("Retrieving session for user: ")
+        console.log(user)
 
         crypto.scrypt(password, row.salt, 32, function (err, hashedPassword) {
           console.log("password: " + password);

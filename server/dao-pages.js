@@ -3,18 +3,28 @@
 const db = require("./db");
 const crypto = require("crypto");
 const { v4: uuidv4 } = require("uuid");
-const blocksDao = require('./dao-blocks')
+const blocksDao = require("./dao-blocks");
 
 exports.getAllPages = (session) => {
   return new Promise((resolve, reject) => {
-
     //Se la sessione non è valida, l'utente non è loggato. Quindi ritorno un set di pagine solo in stato Published.
     //Se la sessione è valida, ritorno tutte le pagine.
     //Il controllo sul modify e delete va fatto frontend
 
     //Se la sessione è valida e in oltre l'utente loggato è admin deve poter cancellare e modificare qualsiasi pagina, e inoltre avere la possibilità di cambiare l'autore di una pagina.
-    const sql =
-      "SELECT pages.*, users.username FROM pages JOIN users ON pages.author = users.id ORDER BY pages.publication_date";
+    var sql = "";
+    
+    if (!session) {
+      //page with status 'published'
+      console.log("not logged user")
+      sql =
+        "SELECT pages.*, users.username FROM pages JOIN users ON pages.author = users.id WHERE pages.publication_date <= date('now') ORDER BY pages.publication_date;";
+    } else {
+      console.log("logged user")
+      sql =
+        "SELECT pages.*, users.username FROM pages JOIN users ON pages.author = users.id ORDER BY pages.publication_date";
+    }
+
     db.all(sql, (err, row) => {
       if (err) {
         reject(err);
@@ -130,7 +140,7 @@ exports.modifyPage = (page) => {
           //INSERT INTO blocks (id, name, type, contents, page_blocks, item_order)s
 
           //check component already exists:
-          const checkFlag = await checkBlockAlreadyExists(block.id)
+          const checkFlag = await checkBlockAlreadyExists(block.id);
           console.log("PRINTING CHECK FLAG");
           console.log(checkFlag);
           if (!checkFlag) {
@@ -187,15 +197,18 @@ exports.modifyPage = (page) => {
       } else {
         row.forEach((r) => {
           if (!currentBlock.find((cb) => cb.id === r.id)) {
-            blocksDao.deleteBlock(r.id).then((resp)=>{
-              if(resp){
-                console.log("Block "+r.id+" deleted successfully")
-                resolve(resp)
-              }
-            }).catch(err=>console.log(err))
+            blocksDao
+              .deleteBlock(r.id)
+              .then((resp) => {
+                if (resp) {
+                  console.log("Block " + r.id + " deleted successfully");
+                  resolve(resp);
+                }
+              })
+              .catch((err) => console.log(err));
           }
         });
-        resolve(row)
+        resolve(row);
       }
     });
   });

@@ -23,8 +23,14 @@ passport.use(
   })
 );
 passport.serializeUser(function (user, callback) {
-  // this user is id + username + name
-  callback(null, user);
+  // this user is id + username + name + isAdmin
+  console.log(user);
+  callback(null, {
+    id: user.id,
+    username: user.username,
+    name: user.name,
+    isAdmin: user.isAdmin,
+  });
 });
 
 passport.deserializeUser(function (user, callback) {
@@ -142,8 +148,13 @@ app.delete("/users/:id", (req, res) => {
 });
 
 app.get("/pages", (req, res) => {
+  var session = undefined;
+  if (req.isAuthenticated()) {
+    console.log("the user is authenticated");
+    session = req.user;
+  }
   pageDao
-    .getAllPages()
+    .getAllPages(session)
     .then((resp) => {
       res.json(resp);
     })
@@ -164,7 +175,7 @@ app.put(
       .isLength({ min: 1, max: 50 })
       .withMessage("Invalid title, the title must be at most 50 characters"),
     check("publication_date")
-      .optional()
+      .optional({ values: "falsy" })
       .isDate({ format: "YYYY-MM-DD" })
       .withMessage("Invalid publication date"),
     check("blocks")
@@ -172,12 +183,24 @@ app.put(
       .notEmpty()
       .custom((value) => {
         //console.log(value)
-        const containsHeader = value.some((obj) => obj.blockType === "h"&&!(obj.content===''));
-        const containsParagraph = value.some((obj) => obj.blockType === "p"&&!(obj.content===''));
-        const containsImage = value.some((obj) => obj.blockType === "img"&&!(obj.content===''));
-        const containsImageContent = value.some((obj) => obj.blockType === "img" && obj.content !== '');
+        const containsHeader = value.some(
+          (obj) => obj.blockType === "h" && !(obj.content === "")
+        );
+        const containsParagraph = value.some(
+          (obj) => obj.blockType === "p" && !(obj.content === "")
+        );
+        const containsImage = value.some(
+          (obj) => obj.blockType === "img" && !(obj.content === "")
+        );
+        const containsImageContent = value.some(
+          (obj) => obj.blockType === "img" && obj.content !== ""
+        );
 
-        if (containsHeader && (containsParagraph || containsImage) && containsImageContent) {
+        if (
+          containsHeader &&
+          (containsParagraph || containsImage) &&
+          containsImageContent
+        ) {
           return true;
         }
         return false;
@@ -232,27 +255,38 @@ app.post(
       .isLength({ min: 1, max: 50 })
       .withMessage("Invalid author, the author must be at most 50 characters"),
     check("publication_date")
-      .optional()
+      .optional({ values: "falsy" })
       .isDate({ format: "YYYY-MM-DD" })
-      .withMessage("invalid Publication date"),
+      .withMessage("Invalid Publication date"),
     check("blocks")
       .isArray()
       .notEmpty()
       .custom((value) => {
-        console.log(value)
-        const containsHeader = value.some((obj) => obj.blockType === "h"&&!(obj.content===''));
-        const containsParagraph = value.some((obj) => obj.blockType === "p"&&!(obj.content===''));
-        const containsImage = value.some((obj) => obj.blockType === "img"&&!(obj.content===''));
-        const containsImageContent = value.some((obj) => obj.blockType === "img" && obj.content !== '');
-
-        console.log(containsHeader)
-        console.log(containsParagraph)
-        console.log(containsImage)
-        console.log(containsImageContent)
+        console.log(value);
+        const containsHeader = value.some(
+          (obj) => obj.blockType === "h" && !(obj.content === "")
+        );
+        const containsParagraph = value.some(
+          (obj) => obj.blockType === "p" && !(obj.content === "")
+        );
+        const containsImage = value.some(
+          (obj) => obj.blockType === "img" && !(obj.content === "")
+        );
+        const containsImageContent = value.some(
+          (obj) => obj.blockType === "img" && obj.content !== ""
+        );
 
         //check if image exists the content must be populated
-        console.log(containsHeader && (containsParagraph || containsImage) && containsImageContent)
-        if (containsHeader && (containsParagraph || containsImage) && containsImageContent) {
+        console.log(
+          containsHeader &&
+            (containsParagraph || containsImage) &&
+            containsImageContent
+        );
+        if (
+          containsHeader &&
+          (containsParagraph || containsImage) &&
+          containsImageContent
+        ) {
           return true;
         }
         return false;

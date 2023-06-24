@@ -23,7 +23,7 @@ function Home({loggedIn}) {
   useEffect(() => {
     getPagesHandler();
 
-  }, []);
+  }, [user]);
 
   return (
     <div
