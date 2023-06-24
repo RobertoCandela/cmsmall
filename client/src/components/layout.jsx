@@ -15,28 +15,15 @@ import { getCurrentSession } from "../service/auth-service";
 import userContext from "../userContext";
 import { getSettings } from "../service/settings-service";
 
-function Layout({ isLogged, logout }) {
+function Layout({ isLogged, logout,appName }) {
   // useState(false) inizializza lo stato della variabile isLogged
   
   const [anchorEl, setAnchorEl] = useState(null);
-  const [appName, setAppName] = useState("");
   const navigate = useNavigate();
   const user = useContext(userContext);
 
   const theme = useTheme();
 
-  useEffect(()=>{getAppName()},[])
-
-  async function getAppName(){
-
-    const settings = await getSettings()
-    console.log(settings)
-    settings.forEach(s=>{if(s.id==='appName'){
-      setAppName(s.value)
-    }})
-
-  }
-  
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
   };

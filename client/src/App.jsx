@@ -25,6 +25,8 @@ import {
 } from "./service/auth-service";
 import { SnackbarProvider, useSnackbar } from "notistack";
 import UserContext from "./userContext";
+import AppContext from "./appContext";
+import { getSettings, updateSetting } from "./service/settings-service";
 
 const theme = createTheme({
   palette: {
@@ -56,6 +58,18 @@ function SnackbarCloseButton({ snackbarKey }) {
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
   const [user, setUser] = useState(undefined);
+  const [appName,setAppName] = useState("");
+
+  async function getAppName() {
+    const settings = await getSettings();
+    console.log(settings);
+    settings.forEach((s) => {
+      if (s.id === "appName") {
+        setAppName(s.value);
+      }
+    });
+  }
+
   const init = async () => {
     try {
       const user = await getCurrentSession();
@@ -74,7 +88,20 @@ function App() {
   };
   useEffect(() => {
     init();
+    getAppName();
   }, []);
+
+  const handleAppName = async (appName) => {
+    const settingId = "appName";
+    updateSetting({ id: settingId, value: appName })
+      .then((resp) => {
+        setAppName(resp.value);
+      })
+      .catch((err) => {
+        console.log(err);
+        throw err;
+      });
+  };
 
   const handleLogin = async (userCredentials) => {
     try {
@@ -124,13 +151,14 @@ function App() {
         )}
       >
         <UserContext.Provider value={user}>
+        <AppContext.Provider value={appName}>
         <CssBaseline />
         <Router>
           <Routes>
             <Route
               path="/"
               element={
-                <Layout isLogged={loggedIn} logout={handleLogout} />
+                <Layout isLogged={loggedIn} logout={handleLogout} appName={appName} />
               }
             >
               <Route index element={<Home loggedIn={loggedIn} />} />
@@ -171,7 +199,7 @@ function App() {
                 path="/settings"
                 element={
                   loggedIn && user.isAdmin ? (
-                    <Settings />
+                    <Settings handleAppName={handleAppName} />
                   ) : (
                     <Navigate replace to="/login" />
                   )
@@ -181,6 +209,7 @@ function App() {
             </Route>
           </Routes>
         </Router>
+        </AppContext.Provider>
         </UserContext.Provider>
       </SnackbarProvider>
     </ThemeProvider>
