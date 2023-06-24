@@ -5,6 +5,7 @@ const express = require("express");
 const userDao = require("./dao-users");
 const pageDao = require("./dao-pages");
 const blocksDao = require("./dao-blocks");
+const settingsDao = require("./dao-settings");
 const cors = require("cors");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
@@ -379,6 +380,26 @@ app.get("/api/sessions/current", (req, res) => {
     res.status(200).json(req.user);
   } else res.status(401).json({ error: "Not authenticated" });
 });
+
+app.get("/settings", (req, res) => {
+  settingsDao
+    .getSettings()
+    .then((resp) => {
+      res.json(resp)
+    })
+    .catch((err) => console.log(err));
+});
+
+app.put("/settings/:id",(req,res)=>{
+  console.log(req.body)
+  settingsDao
+    .updateSettings(req.body)
+    .then((resp) => {
+      res.json(resp)
+    })
+    .catch((err) => console.log(err));
+
+})
 
 // DELETE /api/session/current
 // This route is used for loggin out the current user.

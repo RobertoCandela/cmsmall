@@ -32,9 +32,17 @@ CREATE TABLE IF NOT EXISTS pages (
    FOREIGN KEY (author) REFERENCES users(id)
 );
 
+CREATE TABLE IF NOT EXISTS settings (
+   id varchar(10) PRIMARY KEY,
+   value varchar(10) NOT NULL
+);
+
 
 INSERT INTO users (id, name, surname, username, email, password, salt, isAdmin)
 VALUES ('4aeb3f9c-4916-437d-bc5a-4f5d1e2c383a', 'admin', 'admin', 'admin', 'admin@cmsmall.com', '912bb56154e7e99e7911e488c4a04fb5ee304256f22c4933f648c44baba5aedc','ba28b7c2f336a3e43fe1b1b7a153a602', 1);
+
+INSERT INTO settings (id,value)
+VALUES ('appName','CMSMall');
 
 -- Inserimento dati nella tabella blocks
 -- INSERT INTO blocks (id, name, type, contents, page_blocks, item_order)
