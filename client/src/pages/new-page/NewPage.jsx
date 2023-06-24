@@ -15,7 +15,7 @@ export function NewPage() {
   const [publishDate, setPublishDate] = useState("");
   const [open, setOpen] = useState(false);
   const [canvasItem, setCanvasItem] = useState([]);
-  const [assignedUser,setAssignedUser] = useState(undefined)
+  const [assignedUser,setAssignedUser] = useState(undefined);
   const { enqueueSnackbar } = useSnackbar();
   const user = useContext(userContext);
 
@@ -35,7 +35,7 @@ export function NewPage() {
 
     const page = {
       title: pageName,
-      author: user.id,
+      author: assignedUser?assignedUser.id:user.id,
       created_at: new Date().toISOString(),
       publication_date: publishDate,
       blocks: canvasItem,

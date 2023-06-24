@@ -1,18 +1,23 @@
 import { Button, ButtonGroup, TextField } from "@mui/material";
 import { Canvas } from "../../components/canvas";
 
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Modal from "../../components/modal";
 import KeyboardBackspaceRoundedIcon from "@mui/icons-material/KeyboardBackspaceRounded";
 import { useNavigate, useParams } from "react-router-dom";
 import { createPage, getPage, updatePage } from "../../service/page-service";
 import { enqueueSnackbar } from "notistack";
+import ComboBox from "../../components/combobox";
+import userContext from "../../userContext";
 
 function ModifyPage() {
   const [pageName, setPageName] = useState("");
   const [publishDate, setPublishDate] = useState("");
+  const [assignedUser, setAssignedUser] = useState(undefined);
+  const [pageAuthor,setPageAuthor] = useState("")
   const [open, setOpen] = useState(false);
   const [canvasItem, setCanvasItem] = useState([]);
+  const user = useContext(userContext);
 
   const history = useNavigate();
 
@@ -24,6 +29,7 @@ function ModifyPage() {
         setPageName(resp.title);
         setPublishDate(resp.publication_date);
         setCanvasItem(resp.blocks.sort((a, b) => a.item_order - b.item_order));
+        setPageAuthor(resp.username)
       })
       .catch((err) => console.log(err));
   }, []);
@@ -32,30 +38,33 @@ function ModifyPage() {
     //INSERT INTO bloxcks (id, name, type, contents, page_blocks, item_order)
 
     const page = {
-      id:params.id,
+      id: params.id,
       title: pageName,
       publication_date: publishDate,
       blocks: canvasItem,
     };
+
+    if(assignedUser){
+      page.author = assignedUser.id
+    }
 
     console.log("sending payload...");
     console.log(page);
 
     updatePage(page)
       .then((resp) => {
-        console.log(resp)
+        console.log(resp);
         if (resp) {
           history("/");
         }
       })
       .catch((err) => {
-        const errorMessage = Array.from(err.errors.errors)
-        errorMessage.forEach(err=>{
-          console.log(err)
-          enqueueSnackbar(err.msg,{variant:'error'})
-        })
+        const errorMessage = Array.from(err.errors.errors);
+        errorMessage.forEach((err) => {
+          console.log(err);
+          enqueueSnackbar(err.msg, { variant: "error" });
+        });
       });
-       
   }
   return (
     <>
@@ -96,8 +105,14 @@ function ModifyPage() {
           InputLabelProps={{
             shrink: true,
           }}
-          sx={{ marginLeft: "10px" }}
+          sx={{ marginLeft: "10px",marginRight:"10px" }}
         />
+        {user.isAdmin === 1 && (
+          <ComboBox
+            assignedUser={assignedUser?assignedUser:pageAuthor}
+            setAssignedUser={setAssignedUser}
+          />
+        )}
       </div>
       <Canvas
         destinationItems={canvasItem}

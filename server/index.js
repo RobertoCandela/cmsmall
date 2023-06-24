@@ -220,6 +220,7 @@ app.put(
       title: req.body.title,
       publication_date: req.body.publication_date,
       blocks: req.body.blocks,
+      author: req.body.author
     };
     pageDao
       .modifyPage(page)

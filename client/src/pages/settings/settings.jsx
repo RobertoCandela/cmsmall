@@ -10,17 +10,6 @@ function Settings({ handleAppName }) {
   const history = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
 
-  //   setNewAppName(newAppName);
-  //   const settingId = 'appName'
-  //   updateSetting({id:settingId,value:newAppName})
-
-  async function updateAppName() {
-    const settingId = "appName";
-    console.log("updating page name with id: ");
-    console.log({ id: settingId, value: newAppName });
-    updateSetting({ id: settingId, value: newAppName });
-  }
-
   const onClickSubmit = () => {
     handleAppName(newAppName)
       .then(() => {

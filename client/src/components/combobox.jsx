@@ -25,6 +25,7 @@ export default function ComboBox({assignedUser,setAssignedUser}) {
       <Autocomplete
         disablePortal
         id="combo-box-demo"
+        value={assignedUser}
         options={users}
         sx={{ width: 300 }}
         renderInput={(params) => <TextField {...params} label="Assign to user" />}

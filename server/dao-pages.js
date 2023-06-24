@@ -13,14 +13,14 @@ exports.getAllPages = (session) => {
 
     //Se la sessione è valida e in oltre l'utente loggato è admin deve poter cancellare e modificare qualsiasi pagina, e inoltre avere la possibilità di cambiare l'autore di una pagina.
     var sql = "";
-    
+
     if (!session) {
       //page with status 'published'
-      console.log("not logged user")
+      console.log("not logged user");
       sql =
-        "SELECT pages.*, users.username FROM pages JOIN users ON pages.author = users.id WHERE pages.publication_date <= date('now') ORDER BY pages.publication_date;";
+        "SELECT pages.*, users.username FROM pages JOIN users ON pages.author = users.id WHERE pages.publication_date <= date('now') AND pages.publication_date <> '' ORDER BY pages.publication_date;";
     } else {
-      console.log("logged user")
+      console.log("logged user");
       sql =
         "SELECT pages.*, users.username FROM pages JOIN users ON pages.author = users.id ORDER BY pages.publication_date";
     }
@@ -125,65 +125,140 @@ exports.modifyPage = (page) => {
 
     console.log("creationTime: " + now);
 
-    const sql =
-      "UPDATE pages SET title = ?, publication_date=? WHERE pages.id=?";
-    db.run(sql, [page.title, page.publication_date, page.id], (err) => {
-      if (err) {
-        reject(err);
-      } else {
-        // const orderedPageBlocks = page.blocks.sort((a, b) => a.item_order - b.item_order)
-        // console.log('====================')
-        // console.log('ordered page blocks')
-        // console.log(orderedPageBlocks)
-        page.blocks.forEach(async (block) => {
-          /*create pageblocks*/
-          //INSERT INTO blocks (id, name, type, contents, page_blocks, item_order)s
+    console.log("updating author with user id ");
 
-          //check component already exists:
-          const checkFlag = await checkBlockAlreadyExists(block.id);
-          console.log("PRINTING CHECK FLAG");
-          console.log(checkFlag);
-          if (!checkFlag) {
-            const sqlBlocks =
-              "UPDATE blocks SET content=?, item_order=? WHERE blocks.id=?";
-            db.run(
-              sqlBlocks,
-              [block.content, block.item_order, block.id],
-              (err, row) => {
-                console.log("DOING UPDATE ON ALREADY EXISTING ITEM");
-                if (err) {
-                  reject(err);
+ 
+    if (page.author) {
+      const sql =
+        "UPDATE pages SET title = ?, author=?, publication_date=? WHERE pages.id=?";
+        db.run(
+          sql,
+          [page.title, page.author, page.publication_date, page.id],
+          (err) => {
+            if (err) {
+              reject(err);
+            } else {
+              // const orderedPageBlocks = page.blocks.sort((a, b) => a.item_order - b.item_order)
+              // console.log('====================')
+              // console.log('ordered page blocks')
+              // console.log(orderedPageBlocks)
+              page.blocks.forEach(async (block) => {
+                /*create pageblocks*/
+                //INSERT INTO blocks (id, name, type, contents, page_blocks, item_order)s
+    
+                //check component already exists:
+                const checkFlag = await checkBlockAlreadyExists(block.id);
+                console.log("PRINTING CHECK FLAG");
+                console.log(checkFlag);
+                if (!checkFlag) {
+                  const sqlBlocks =
+                    "UPDATE blocks SET content=?, item_order=? WHERE blocks.id=?";
+                  db.run(
+                    sqlBlocks,
+                    [block.content, block.item_order, block.id],
+                    (err, row) => {
+                      console.log("DOING UPDATE ON ALREADY EXISTING ITEM");
+                      if (err) {
+                        reject(err);
+                      } else {
+                        resolve(row);
+                      }
+                    }
+                  );
                 } else {
-                  resolve(row);
+                  const sqlBlocks =
+                    "INSERT INTO blocks (id, blockType, content, page_blocks, item_order) VALUES(?,?,?,?,?)";
+                  db.run(
+                    sqlBlocks,
+                    [
+                      block.id,
+                      block.blockType,
+                      block.content,
+                      id_page,
+                      block.item_order,
+                    ],
+                    (err, row) => {
+                      if (err) {
+                        reject(err);
+                      } else {
+                        resolve(row);
+                      }
+                    }
+                  );
                 }
-              }
-            );
-          } else {
-            const sqlBlocks =
-              "INSERT INTO blocks (id, blockType, content, page_blocks, item_order) VALUES(?,?,?,?,?)";
-            db.run(
-              sqlBlocks,
-              [
-                block.id,
-                block.blockType,
-                block.content,
-                id_page,
-                block.item_order,
-              ],
-              (err, row) => {
-                if (err) {
-                  reject(err);
-                } else {
-                  resolve(row);
-                }
-              }
-            );
+              });
+    
+              resolve(this.getPage(id_page));
+            }
           }
-        });
+        );
+    } else {
 
-        resolve(this.getPage(id_page));
-      }
-    });
+      const sql = "UPDATE pages SET title = ?, publication_date=? WHERE pages.id=?";
+      db.run(
+        sql,
+        [page.title, page.publication_date, page.id],
+        (err) => {
+          if (err) {
+            reject(err);
+          } else {
+            // const orderedPageBlocks = page.blocks.sort((a, b) => a.item_order - b.item_order)
+            // console.log('====================')
+            // console.log('ordered page blocks')
+            // console.log(orderedPageBlocks)
+            page.blocks.forEach(async (block) => {
+              /*create pageblocks*/
+              //INSERT INTO blocks (id, name, type, contents, page_blocks, item_order)s
+  
+              //check component already exists:
+              const checkFlag = await checkBlockAlreadyExists(block.id);
+              console.log("PRINTING CHECK FLAG");
+              console.log(checkFlag);
+              if (!checkFlag) {
+                const sqlBlocks =
+                  "UPDATE blocks SET content=?, item_order=? WHERE blocks.id=?";
+                db.run(
+                  sqlBlocks,
+                  [block.content, block.item_order, block.id],
+                  (err, row) => {
+                    console.log("DOING UPDATE ON ALREADY EXISTING ITEM");
+                    if (err) {
+                      reject(err);
+                    } else {
+                      resolve(row);
+                    }
+                  }
+                );
+              } else {
+                const sqlBlocks =
+                  "INSERT INTO blocks (id, blockType, content, page_blocks, item_order) VALUES(?,?,?,?,?)";
+                db.run(
+                  sqlBlocks,
+                  [
+                    block.id,
+                    block.blockType,
+                    block.content,
+                    id_page,
+                    block.item_order,
+                  ],
+                  (err, row) => {
+                    if (err) {
+                      reject(err);
+                    } else {
+                      resolve(row);
+                    }
+                  }
+                );
+              }
+            });
+  
+            resolve(this.getPage(id_page));
+          }
+        }
+      );
+
+    }
+   
 
     const currentBlock = page.blocks;
 
