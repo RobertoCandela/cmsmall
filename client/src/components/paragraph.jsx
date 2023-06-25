@@ -2,7 +2,7 @@ import { HighlightOffRounded } from "@mui/icons-material";
 import { IconButton, TextField, TextareaAutosize } from "@mui/material";
 import { useState } from "react";
 
-export function Paragraph({ item, discardItem,handleSelectedItem }) {
+export function Paragraph({ item, discardItem, handleSelectedItem }) {
   const [onHoverComponent, setOnHoverComponent] = useState(false);
 
   return (
@@ -27,9 +27,9 @@ export function Paragraph({ item, discardItem,handleSelectedItem }) {
         variant="standard"
         multiline
         fullWidth
-        value= {item.content}
+        value={item.content}
         placeholder="Paragraph"
-        onChange={(e)=>handleSelectedItem(e.target.value)}
+        onChange={(e) => handleSelectedItem(e.target.value)}
       ></TextField>
     </div>
   );

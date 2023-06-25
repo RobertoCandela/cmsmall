@@ -12,8 +12,7 @@ import { Outlet, useNavigate } from "react-router-dom";
 import { useTheme } from "@mui/material/styles";
 import userContext from "../userContext";
 
-function Layout({ isLogged, logout,appName }) {
-
+function Layout({ isLogged, logout, appName }) {
   const [anchorEl, setAnchorEl] = useState(null);
   const navigate = useNavigate();
   const user = useContext(userContext);
@@ -71,7 +70,9 @@ function Layout({ isLogged, logout,appName }) {
                   Logout
                 </MenuItem>
                 {user.isAdmin ? (
-                  <MenuItem onClick={()=>navigate("/settings")}>Settings</MenuItem>
+                  <MenuItem onClick={() => navigate("/settings")}>
+                    Settings
+                  </MenuItem>
                 ) : (
                   <div></div>
                 )}
@@ -89,12 +90,8 @@ function Layout({ isLogged, logout,appName }) {
           )}
         </Toolbar>
       </AppBar>
-      <div style={{ padding: "32px", marginBottom:"62px" }}>
-        {/* <Container maxWidth="xl">
-        <Box sx={{ height: "calc(100vh - 192px)", padding: "32px" }}> */}
+      <div style={{ padding: "32px", marginBottom: "62px" }}>
         <Outlet />
-        {/* </Box>
-     </Container>   */}
       </div>
 
       <div

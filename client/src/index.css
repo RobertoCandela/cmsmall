@@ -3,6 +3,8 @@ body {
   max-width: 100%;
   overflow-x: hidden;
 }
-*,*::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: unset !important;
 }

@@ -7,7 +7,6 @@ const blocksDao = require("./dao-blocks");
 
 exports.getAllPages = (session) => {
   return new Promise((resolve, reject) => {
-  
     var sql = "";
 
     if (!session) {
@@ -106,62 +105,9 @@ exports.modifyPage = (page) => {
     if (page.author) {
       const sql =
         "UPDATE pages SET title = ?, author=?, publication_date=? WHERE pages.id=?";
-        db.run(
-          sql,
-          [page.title, page.author, page.publication_date, page.id],
-          (err) => {
-            if (err) {
-              reject(err);
-            } else {
-              page.blocks.forEach(async (block) => {
-                const checkFlag = await checkBlockAlreadyExists(block.id);
-                if (!checkFlag) {
-                  const sqlBlocks =
-                    "UPDATE blocks SET content=?, item_order=? WHERE blocks.id=?";
-                  db.run(
-                    sqlBlocks,
-                    [block.content, block.item_order, block.id],
-                    (err, row) => {
-                      if (err) {
-                        reject(err);
-                      } else {
-                        resolve(row);
-                      }
-                    }
-                  );
-                } else {
-                  const sqlBlocks =
-                    "INSERT INTO blocks (id, blockType, content, page_blocks, item_order) VALUES(?,?,?,?,?)";
-                  db.run(
-                    sqlBlocks,
-                    [
-                      block.id,
-                      block.blockType,
-                      block.content,
-                      id_page,
-                      block.item_order,
-                    ],
-                    (err, row) => {
-                      if (err) {
-                        reject(err);
-                      } else {
-                        resolve(row);
-                      }
-                    }
-                  );
-                }
-              });
-    
-              resolve(this.getPage(id_page));
-            }
-          }
-        );
-    } else {
-
-      const sql = "UPDATE pages SET title = ?, publication_date=? WHERE pages.id=?";
       db.run(
         sql,
-        [page.title, page.publication_date, page.id],
+        [page.title, page.author, page.publication_date, page.id],
         (err) => {
           if (err) {
             reject(err);
@@ -204,14 +150,61 @@ exports.modifyPage = (page) => {
                 );
               }
             });
-  
+
             resolve(this.getPage(id_page));
           }
         }
       );
+    } else {
+      const sql =
+        "UPDATE pages SET title = ?, publication_date=? WHERE pages.id=?";
+      db.run(sql, [page.title, page.publication_date, page.id], (err) => {
+        if (err) {
+          reject(err);
+        } else {
+          page.blocks.forEach(async (block) => {
+            const checkFlag = await checkBlockAlreadyExists(block.id);
+            if (!checkFlag) {
+              const sqlBlocks =
+                "UPDATE blocks SET content=?, item_order=? WHERE blocks.id=?";
+              db.run(
+                sqlBlocks,
+                [block.content, block.item_order, block.id],
+                (err, row) => {
+                  if (err) {
+                    reject(err);
+                  } else {
+                    resolve(row);
+                  }
+                }
+              );
+            } else {
+              const sqlBlocks =
+                "INSERT INTO blocks (id, blockType, content, page_blocks, item_order) VALUES(?,?,?,?,?)";
+              db.run(
+                sqlBlocks,
+                [
+                  block.id,
+                  block.blockType,
+                  block.content,
+                  id_page,
+                  block.item_order,
+                ],
+                (err, row) => {
+                  if (err) {
+                    reject(err);
+                  } else {
+                    resolve(row);
+                  }
+                }
+              );
+            }
+          });
 
+          resolve(this.getPage(id_page));
+        }
+      });
     }
-   
 
     const currentBlock = page.blocks;
 
@@ -242,9 +235,7 @@ exports.modifyPage = (page) => {
 };
 exports.createPage = (page) => {
   return new Promise((resolve, reject) => {
-    
     const id_page = uuidv4();
-
 
     const now = new Date().toISOString();
 

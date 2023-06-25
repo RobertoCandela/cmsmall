@@ -12,9 +12,14 @@ export function Header({ item, discardItem, handleSelectedItem }) {
       onMouseLeave={() => setOnHoverComponent(false)}
     >
       {onHoverComponent && (
-        <div style={{ position: "absolute", right: '-16px', top:'-16px' }}>
-          <IconButton color="error" onClick={e=>{discardItem(item.id)}}>
-            <HighlightOffRounded  />
+        <div style={{ position: "absolute", right: "-16px", top: "-16px" }}>
+          <IconButton
+            color="error"
+            onClick={(e) => {
+              discardItem(item.id);
+            }}
+          >
+            <HighlightOffRounded />
           </IconButton>
         </div>
       )}
@@ -23,9 +28,9 @@ export function Header({ item, discardItem, handleSelectedItem }) {
         multiline
         fullWidth
         placeholder="Header"
-        value = {item.content}
+        value={item.content}
         inputProps={{ style: { fontSize: "30px", fontWeight: "bold" } }}
-        onChange={(e)=>handleSelectedItem(e.target.value)}
+        onChange={(e) => handleSelectedItem(e.target.value)}
       ></TextField>
     </div>
   );

@@ -61,9 +61,8 @@ export function Canvas({ destinationItems, setDestinationItems }) {
   };
 
   function discardItem(id) {
-      const aux = destinationItems.filter((i) => i.id != id);
-      setDestinationItems(aux);
-    
+    const aux = destinationItems.filter((i) => i.id != id);
+    setDestinationItems(aux);
   }
 
   function handleSelectedImage(path, item_id) {

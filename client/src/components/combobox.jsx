@@ -3,7 +3,7 @@ import Autocomplete from "@mui/material/Autocomplete";
 import { getAllUsers } from "../service/user-service";
 import { useEffect, useState } from "react";
 
-export default function ComboBox({assignedUser,setAssignedUser}) {
+export default function ComboBox({ assignedUser, setAssignedUser }) {
   const [users, setUsers] = useState([]);
 
   const getUsers = async () => {
@@ -27,10 +27,12 @@ export default function ComboBox({assignedUser,setAssignedUser}) {
         value={assignedUser}
         options={users}
         sx={{ width: 300 }}
-        renderInput={(params) => <TextField {...params} label="Assign to user" />}
+        renderInput={(params) => (
+          <TextField {...params} label="Assign to user" />
+        )}
         onChange={(event, newValue) => {
-            setAssignedUser(newValue);
-          }}
+          setAssignedUser(newValue);
+        }}
       />
     )
   );

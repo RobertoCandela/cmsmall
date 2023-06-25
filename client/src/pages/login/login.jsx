@@ -42,7 +42,7 @@ function Login({ login }) {
     const credentials = { username: username, password: password };
     login(credentials)
       .then(() => {
-        history('/')
+        history("/");
       })
       .catch((err) => {
         console.log("Error caught ");
@@ -58,15 +58,15 @@ function Login({ login }) {
 
   return (
     <div className="login">
-       <Snackbar
+      <Snackbar
         open={showAlert}
         autoHideDuration={6000}
         onClose={() => {
           setShowAlert(false);
           setErrorMessage("");
         }}
-        anchorOrigin = {{vertical:'top',horizontal:'center'}}
-        sx={{marginTop:'64px'}}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        sx={{ marginTop: "64px" }}
       >
         <Alert
           severity="error"

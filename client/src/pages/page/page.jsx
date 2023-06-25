@@ -21,14 +21,19 @@ function Page() {
       .catch((err) => console.log(err));
   }, []);
 
-  return <><Button
-  variant="contained"
-  startIcon={<KeyboardBackspaceRoundedIcon />}
-  onClick={(e) => {
-    history("/");
-  }}
->
-  Back
-</Button>{ page && <PageRender page={page}></PageRender>}</>
+  return (
+    <>
+      <Button
+        variant="contained"
+        startIcon={<KeyboardBackspaceRoundedIcon />}
+        onClick={(e) => {
+          history("/");
+        }}
+      >
+        Back
+      </Button>
+      {page && <PageRender page={page}></PageRender>}
+    </>
+  );
 }
 export default Page;

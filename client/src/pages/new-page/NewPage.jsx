@@ -15,7 +15,7 @@ export function NewPage() {
   const [publishDate, setPublishDate] = useState("");
   const [open, setOpen] = useState(false);
   const [canvasItem, setCanvasItem] = useState([]);
-  const [assignedUser,setAssignedUser] = useState(undefined);
+  const [assignedUser, setAssignedUser] = useState(undefined);
   const { enqueueSnackbar } = useSnackbar();
   const user = useContext(userContext);
 
@@ -28,10 +28,9 @@ export function NewPage() {
   };
 
   function savePage() {
-
     const page = {
       title: pageName,
-      author: assignedUser?assignedUser.id:user.id,
+      author: assignedUser ? assignedUser.id : user.id,
       created_at: new Date().toISOString(),
       publication_date: publishDate,
       blocks: canvasItem,
@@ -91,9 +90,14 @@ export function NewPage() {
           InputLabelProps={{
             shrink: true,
           }}
-          sx={{ marginLeft: "10px",marginRight:"10px" }}
+          sx={{ marginLeft: "10px", marginRight: "10px" }}
         />
-        {user.isAdmin===1&&<ComboBox assignedUser={assignedUser} setAssignedUser={setAssignedUser}/>}
+        {user.isAdmin === 1 && (
+          <ComboBox
+            assignedUser={assignedUser}
+            setAssignedUser={setAssignedUser}
+          />
+        )}
       </div>
       <Canvas
         destinationItems={canvasItem}

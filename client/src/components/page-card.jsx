@@ -55,7 +55,7 @@ function PageCard({ data, getPages, style }) {
             Publication date: {data.publication_date}
           </Typography>
         </div>
-        {hover && user&&(user.isAdmin || user.id === data.author) && (
+        {hover && user && (user.isAdmin || user.id === data.author) && (
           <div style={{ position: "absolute", top: 5, right: 5, zIndex: 9999 }}>
             <IconButton
               aria-label="edit"

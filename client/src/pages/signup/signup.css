@@ -1,32 +1,31 @@
 .signup {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  .signup .card {
-    width: 90%;
-    max-width: 650px;
-    margin: 0 auto;
-    padding: 16px;
-    border-radius: 32px;
-  }
-  
-  .signup .card:hover {
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1), 0px 6px 20px rgba(0, 0, 0, 0.1);
-  }
-  
-  .signup .card .title {
-    text-align: center;
-    margin-bottom: 16px;
-  }
-  
-  .signup .card .grid-center {
-    display: flex;
-    justify-content: center;
-  }
-  
-  .signup .card .grid-center .link {
-    cursor: pointer;
-  }
-  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.signup .card {
+  width: 90%;
+  max-width: 650px;
+  margin: 0 auto;
+  padding: 16px;
+  border-radius: 32px;
+}
+
+.signup .card:hover {
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1), 0px 6px 20px rgba(0, 0, 0, 0.1);
+}
+
+.signup .card .title {
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.signup .card .grid-center {
+  display: flex;
+  justify-content: center;
+}
+
+.signup .card .grid-center .link {
+  cursor: pointer;
+}

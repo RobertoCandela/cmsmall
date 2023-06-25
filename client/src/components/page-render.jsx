@@ -2,7 +2,6 @@ import { Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 
 export function PageRender({ page }) {
-
   const [sortedBlocks, setSortedBlocks] = useState([]);
 
   useEffect(() => {
@@ -38,7 +37,6 @@ export function PageRender({ page }) {
         );
       }
       case "img": {
-
         return (
           <div
             style={{
@@ -46,7 +44,7 @@ export function PageRender({ page }) {
               height: "250px",
               display: "flex",
               justifyContent: "center",
-              margin:'auto'
+              margin: "auto",
             }}
           >
             <img
@@ -79,13 +77,21 @@ export function PageRender({ page }) {
       </Typography>
       <Typography
         variant="body2"
-        sx={{ display: "flex", justifyContent: "center",marginBottom:'20px'}}
+        sx={{ display: "flex", justifyContent: "center", marginBottom: "20px" }}
       >
         {" "}
         Publication Date: {page.publication_date}
       </Typography>
 
-      <div style={{ backgroundColor: "white", padding:'32px',width:'80%',margin:'auto', marginBottom:'74px'}}>
+      <div
+        style={{
+          backgroundColor: "white",
+          padding: "32px",
+          width: "80%",
+          margin: "auto",
+          marginBottom: "74px",
+        }}
+      >
         {sortedBlocks.map((item) => renderItem(item))}
       </div>
     </>

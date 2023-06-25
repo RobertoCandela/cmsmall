@@ -5,7 +5,6 @@ function getJson(httpResponsePromise) {
     httpResponsePromise
       .then((response) => {
         if (response.ok) {
-
           response
             .json()
             .then((json) => resolve(json))

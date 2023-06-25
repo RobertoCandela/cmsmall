@@ -21,7 +21,7 @@ function Settings({ handleAppName }) {
   };
 
   return (
-  <div style={{ display: "flex", alignItems: "center" }}>
+    <div style={{ display: "flex", alignItems: "center" }}>
       <TextField
         label="App Name"
         onChange={(e) => {

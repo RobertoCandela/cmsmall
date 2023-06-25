@@ -75,7 +75,7 @@ export function Image({ item, discardItem, handleSelectedImage }) {
             height: "250px",
             display: "flex",
             justifyContent: "center",
-            margin:'auto'
+            margin: "auto",
           }}
         >
           <img

@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { getCurrentSession } from "../../service/auth-service";
 import userContext from "../../userContext";
 
-function Home({loggedIn}) {
+function Home({ loggedIn }) {
   const [dataList, setDataList] = useState([]);
   const history = useNavigate();
 
@@ -19,10 +19,9 @@ function Home({loggedIn}) {
       console.log(resp);
     });
   };
-  
+
   useEffect(() => {
     getPagesHandler();
-
   }, [user]);
 
   return (
@@ -30,7 +29,7 @@ function Home({loggedIn}) {
       style={{
         display: "flex",
         alignItems: "center",
-        flexDirection: "column"
+        flexDirection: "column",
       }}
     >
       <div className="grid">
@@ -44,11 +43,17 @@ function Home({loggedIn}) {
             ></PageCard>
           ))}
       </div>
-      {user&&<Button variant="contained" sx={{ marginTop: "30px", maxWidth: "190px" }} onClick={()=>{
-        history('/page/new')
-      }}>
-        Create New Page
-      </Button>}
+      {user && (
+        <Button
+          variant="contained"
+          sx={{ marginTop: "30px", maxWidth: "190px" }}
+          onClick={() => {
+            history("/page/new");
+          }}
+        >
+          Create New Page
+        </Button>
+      )}
     </div>
   );
 }

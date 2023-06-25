@@ -15,7 +15,6 @@
 }
 
 .box:hover > .ribbon-top-left::after {
-  /* left: -1px; */
   transition: all 0.3s ease-out;
 }
 
@@ -49,14 +48,14 @@
   z-index: -1;
   content: "";
   display: block;
-  border: 5px solid #1A2433;
+  border: 5px solid #1a2433;
 }
 .ribbon span {
   position: absolute;
   display: block;
   width: 225px;
   padding: 15px 0;
-  background-color: #27374D;
+  background-color: #27374d;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
   color: #fff;
   font: 700 18px/1 "Lato", sans-serif;

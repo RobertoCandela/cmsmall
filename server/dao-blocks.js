@@ -18,7 +18,7 @@ exports.getAllBlocks = () => {
 exports.deleteBlock = (id) => {
   return new Promise((resolve, reject) => {
     const sql = "DELETE FROM blocks WHERE blocks.id=?";
-    db.run(sql, [id],(err, row) => {
+    db.run(sql, [id], (err, row) => {
       if (err) {
         reject(err);
       } else {

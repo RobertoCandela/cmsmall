@@ -5,13 +5,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 
-export default function Modal({
-  title,
-  content,
-  setOpen,
-  open,
-  onConfirm,
-}) {
+export default function Modal({ title, content, setOpen, open, onConfirm }) {
   const handleClose = () => {
     setOpen(false);
   };
@@ -31,7 +25,14 @@ export default function Modal({
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose}>Discard</Button>
-        <Button onClick={()=>{onConfirm(); handleClose()}} autoFocus sx={{color:"red"}}>
+        <Button
+          onClick={() => {
+            onConfirm();
+            handleClose();
+          }}
+          autoFocus
+          sx={{ color: "red" }}
+        >
           Confirm
         </Button>
       </DialogActions>

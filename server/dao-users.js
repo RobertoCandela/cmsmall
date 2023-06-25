@@ -62,7 +62,6 @@ exports.getUserById = (user_id) => {
   });
 };
 
-
 const checkUniqueUser = (user) => {
   return new Promise((resolve, reject) => {
     const sql =
@@ -134,7 +133,6 @@ exports.createUser = (user) => {
         }
       })
       .catch();
-   
   });
 };
 

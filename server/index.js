@@ -24,7 +24,6 @@ passport.use(
   })
 );
 passport.serializeUser(function (user, callback) {
-
   callback(null, {
     id: user.id,
     username: user.username,
@@ -34,9 +33,7 @@ passport.serializeUser(function (user, callback) {
 });
 
 passport.deserializeUser(function (user, callback) {
-
-
-  return callback(null, user); 
+  return callback(null, user);
 });
 
 app.use(express.json());
@@ -67,7 +64,6 @@ app.get("/api/sessions/current", (req, res) => {
   } else res.status(401).json({ error: "Not authenticated" });
 });
 
-
 app.get("/api/users", (req, res) => {
   userDao
     .getAllUsers()
@@ -96,7 +92,7 @@ app.post(
     if (!errors.isEmpty()) {
       return res.status(422).json({ error: errors.array().join(", ") });
     }
- 
+
     const user = {
       name: req.body.name,
       surname: req.body.surname,
@@ -122,12 +118,11 @@ app.get("/api/users/:id", (req, res) => {
   userDao
     .getUserById(req.params.id)
     .then((resp) => {
-      if(resp){
+      if (resp) {
         res.json(resp);
-      }else{
+      } else {
         res.status(404).json({ error: "User not found" });
       }
-      
     })
     .catch((err) => res.status(500).json(err));
 });
@@ -136,12 +131,11 @@ app.delete("/api/users/:id", (req, res) => {
   userDao
     .deleteUser(req.params.id)
     .then((resp) => {
-      if(resp){
+      if (resp) {
         res.status(204).json(resp);
-      }else{
-        res.status(404).json({error: "Block not found"})
+      } else {
+        res.status(404).json({ error: "Block not found" });
       }
-      
     })
     .catch((err) => res.status(500).json(err));
 });
@@ -180,52 +174,53 @@ app.put(
       .isArray({ min: 2 })
       .custom((value) => {
         const hasValidContent = value.some(
-          (block) => ((block.blockType === 'p' || block.blockType === 'img') && block.content !== '')
+          (block) =>
+            (block.blockType === "p" || block.blockType === "img") &&
+            block.content !== ""
         );
         const hasValidHeader = value.some(
-          (block) => block.blockType === 'h' && block.content !== ''
+          (block) => block.blockType === "h" && block.content !== ""
         );
-  
+
         if (!hasValidHeader) {
           return false;
         }
-  
+
         if (!hasValidContent) {
-         return false;
+          return false;
         }
 
         const headerErrors = value
-          .filter((block) => block.blockType === 'h')
+          .filter((block) => block.blockType === "h")
           .map((block) => {
-            if (block.content === '') {
-              return `The content of the object with blockType "h" cannot be empty`
+            if (block.content === "") {
+              return `The content of the object with blockType "h" cannot be empty`;
             }
-            return null; 
+            return null;
           })
           .filter((error) => error !== null);
-  
+
         if (headerErrors.length > 0) {
           return false;
         }
-  
-   
+
         const contentErrors = value
           .filter(
-            (block) => block.blockType === 'p' || block.blockType === 'img'
+            (block) => block.blockType === "p" || block.blockType === "img"
           )
           .map((block) => {
-            if (block.content === '') {
+            if (block.content === "") {
               return `The content of the object with blockType "${block.blockType}" cannot be empty`;
             }
-            return null; 
+            return null;
           })
-          .filter((error) => error !== null); 
-  
+          .filter((error) => error !== null);
+
         if (contentErrors.length > 0) {
           return false;
         }
-  
-        return true; 
+
+        return true;
       })
       .withMessage(
         "The page must contains at least one header, one image and one paragraph with some content"
@@ -281,55 +276,56 @@ app.post(
       .optional({ values: "falsy" })
       .isDate({ format: "YYYY-MM-DD" })
       .withMessage("Invalid Publication date"),
-      check("blocks")
+    check("blocks")
       .isArray({ min: 2 })
       .custom((value) => {
         const hasValidContent = value.some(
-          (block) => ((block.blockType === 'p' || block.blockType === 'img') && block.content !== '')
+          (block) =>
+            (block.blockType === "p" || block.blockType === "img") &&
+            block.content !== ""
         );
         const hasValidHeader = value.some(
-          (block) => block.blockType === 'h' && block.content !== ''
+          (block) => block.blockType === "h" && block.content !== ""
         );
-  
+
         if (!hasValidHeader) {
           return false;
         }
-  
+
         if (!hasValidContent) {
-         return false;
+          return false;
         }
         const headerErrors = value
-          .filter((block) => block.blockType === 'h')
+          .filter((block) => block.blockType === "h")
           .map((block) => {
-            if (block.content === '') {
-              return `The content of the object with blockType "h" cannot be empty`
+            if (block.content === "") {
+              return `The content of the object with blockType "h" cannot be empty`;
             }
-            return null; 
+            return null;
           })
-          .filter((error) => error !== null); 
-  
+          .filter((error) => error !== null);
+
         if (headerErrors.length > 0) {
           return false;
         }
-  
-    
+
         const contentErrors = value
           .filter(
-            (block) => block.blockType === 'p' || block.blockType === 'img'
+            (block) => block.blockType === "p" || block.blockType === "img"
           )
           .map((block) => {
-            if (block.content === '') {
+            if (block.content === "") {
               return `The content of the object with blockType "${block.blockType}" cannot be empty`;
             }
-            return null; 
+            return null;
           })
-          .filter((error) => error !== null); 
-  
+          .filter((error) => error !== null);
+
         if (contentErrors.length > 0) {
           return false;
         }
-  
-        return true; 
+
+        return true;
       })
       .withMessage(
         "The page must contains at least one header, one image and one paragraph with some content"
@@ -338,11 +334,11 @@ app.post(
   (req, res) => {
     const errors = validationResult(req).formatWith(errorFormatter);
     if (!errors.isEmpty()) {
-      return res.status(422).json({ errors }); 
+      return res.status(422).json({ errors });
     }
-   
+
     console.log(req.body);
- 
+
     const page = {
       title: req.body.title,
       author: req.body.author,
@@ -358,7 +354,6 @@ app.post(
       .catch((err) => res.status(500).json(err));
   }
 );
-
 
 app.post("/api/sessions", function (req, res, next) {
   passport.authenticate("local", (err, user, info) => {

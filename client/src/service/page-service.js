@@ -11,17 +11,19 @@ function getJson(httpResponsePromise) {
         } else {
           response
             .json()
-            .then((obj) => reject(obj)) 
-            .catch((err) => reject({ error: "Cannot parse server response" })); 
+            .then((obj) => reject(obj))
+            .catch((err) => reject({ error: "Cannot parse server response" }));
         }
       })
       .catch((err) => reject({ error: "Cannot communicate" }));
   });
 }
 export const getPages = async () => {
-  return getJson(fetch(url + "/pages",{
-    credentials:'include'
-  }));
+  return getJson(
+    fetch(url + "/pages", {
+      credentials: "include",
+    })
+  );
 };
 export const getPage = async (page_id) => {
   return getJson(fetch(url + `/pages/${page_id}`));

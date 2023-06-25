@@ -58,7 +58,7 @@ function SnackbarCloseButton({ snackbarKey }) {
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
   const [user, setUser] = useState(undefined);
-  const [appName,setAppName] = useState("");
+  const [appName, setAppName] = useState("");
 
   async function getAppName() {
     const settings = await getSettings();
@@ -105,8 +105,8 @@ function App() {
       if (user) {
         setUser(user);
         setLoggedIn(true);
-      }else{
-        console.log("user is not valid")
+      } else {
+        console.log("user is not valid");
       }
     } catch (err) {
       console.log(err);
@@ -142,65 +142,73 @@ function App() {
         )}
       >
         <UserContext.Provider value={user}>
-        <AppContext.Provider value={appName}>
-        <CssBaseline />
-        <Router>
-          <Routes>
-            <Route
-              path="/"
-              element={
-                <Layout isLogged={loggedIn} logout={handleLogout} appName={appName} />
-              }
-            >
-              <Route index element={<Home loggedIn={loggedIn} />} />
-              <Route
-                path="/login"
-                element={
-                  !loggedIn ? (
-                    <Login login={handleLogin} />
-                  ) : (
-                    <Navigate replace to="/" />
-                  )
-                }
-              />
-              <Route
-                path="/signup"
-                element={
-                  !loggedIn ? (
-                    <Signup signup={handleSignup} />
-                  ) : (
-                    <Navigate replace to="/" />
-                  )
-                }
-              />
-              <Route
-                path="/modifyPage/:id"
-                element={
-                  loggedIn ? <ModifyPage /> : <Navigate replace to="/login" />
-                }
-              />
-              <Route path="/page/:id" element={<Page />} />
-              <Route
-                path="/page/new"
-                element={
-                  loggedIn ? <NewPage /> : <Navigate replace to="/login" />
-                }
-              />
-              <Route
-                path="/settings"
-                element={
-                  loggedIn && user.isAdmin ? (
-                    <Settings handleAppName={handleAppName} />
-                  ) : (
-                    <Navigate replace to="/login" />
-                  )
-                }
-              />
-              <Route path="*" element={<NoMatch />}></Route>
-            </Route>
-          </Routes>
-        </Router>
-        </AppContext.Provider>
+          <AppContext.Provider value={appName}>
+            <CssBaseline />
+            <Router>
+              <Routes>
+                <Route
+                  path="/"
+                  element={
+                    <Layout
+                      isLogged={loggedIn}
+                      logout={handleLogout}
+                      appName={appName}
+                    />
+                  }
+                >
+                  <Route index element={<Home loggedIn={loggedIn} />} />
+                  <Route
+                    path="/login"
+                    element={
+                      !loggedIn ? (
+                        <Login login={handleLogin} />
+                      ) : (
+                        <Navigate replace to="/" />
+                      )
+                    }
+                  />
+                  <Route
+                    path="/signup"
+                    element={
+                      !loggedIn ? (
+                        <Signup signup={handleSignup} />
+                      ) : (
+                        <Navigate replace to="/" />
+                      )
+                    }
+                  />
+                  <Route
+                    path="/modifyPage/:id"
+                    element={
+                      loggedIn ? (
+                        <ModifyPage />
+                      ) : (
+                        <Navigate replace to="/login" />
+                      )
+                    }
+                  />
+                  <Route path="/page/:id" element={<Page />} />
+                  <Route
+                    path="/page/new"
+                    element={
+                      loggedIn ? <NewPage /> : <Navigate replace to="/login" />
+                    }
+                  />
+                  <Route
+                    path="/settings"
+                    element={
+                      loggedIn && user.isAdmin ? (
+                        <Settings handleAppName={handleAppName} />
+                      ) : (
+                        <Navigate replace to="/login" />
+                      )
+                    }
+                  />
+                  <Route path="*" element={<NoMatch />}></Route>
+                </Route>
+              </Routes>
+            </Router>
+          </AppContext.Provider>
         </UserContext.Provider>
       </SnackbarProvider>
     </ThemeProvider>

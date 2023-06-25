@@ -20,7 +20,7 @@ import { useNavigate } from "react-router-dom";
 import "./signup.css";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 
-function Signup({signup}) {
+function Signup({ signup }) {
   const history = useNavigate();
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -65,19 +65,19 @@ function Signup({signup}) {
       username: username,
       email: email,
       password: password,
-      isAdmin:0
+      isAdmin: 0,
     };
 
     signup(user)
-    .then(() => {
-      history('/')
-    })
-    .catch((err) => {
-      console.log("Error caught ");
-      console.log(err);
-      setErrorMessage(err.errorMessage);
-      setShowAlert(true);
-    });
+      .then(() => {
+        history("/");
+      })
+      .catch((err) => {
+        console.log("Error caught ");
+        console.log(err);
+        setErrorMessage(err.errorMessage);
+        setShowAlert(true);
+      });
   };
 
   const handleMouseDownPassword = (event) => {
@@ -86,15 +86,15 @@ function Signup({signup}) {
 
   return (
     <div className="signup">
-         <Snackbar
+      <Snackbar
         open={showAlert}
         autoHideDuration={6000}
         onClose={() => {
           setShowAlert(false);
           setErrorMessage("");
         }}
-        anchorOrigin = {{vertical:'top',horizontal:'center'}}
-        sx={{marginTop:'64px'}}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        sx={{ marginTop: "64px" }}
       >
         <Alert
           severity="error"
