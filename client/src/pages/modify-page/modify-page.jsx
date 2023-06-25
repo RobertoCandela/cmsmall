@@ -33,7 +33,6 @@ function ModifyPage() {
   }, []);
 
   function savePage() {
-    //INSERT INTO bloxcks (id, name, type, contents, page_blocks, item_order)
 
     const page = {
       id: params.id,
@@ -45,9 +44,6 @@ function ModifyPage() {
     if(assignedUser){
       page.author = assignedUser.id
     }
-
-    console.log("sending payload...");
-    console.log(page);
 
     updatePage(page)
       .then((resp) => {
@@ -127,8 +123,6 @@ function ModifyPage() {
         <Button
           variant="contained"
           onClick={() => {
-            console.log("payload from create Page");
-            console.log(canvasItem);
             savePage();
           }}
         >

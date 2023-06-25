@@ -85,8 +85,6 @@ export function Canvas({ destinationItems, setDestinationItems }) {
   }
 
   function renderItem(item) {
-    //Render logic here
-    console.log(item);
     switch (item.blockType) {
       case "h": {
         return (
@@ -134,12 +132,10 @@ export function Canvas({ destinationItems, setDestinationItems }) {
               ref={provided.innerRef}
               style={{
                 width: "60%",
-                // minHeight: '400px',
                 border: snapshot.isDraggingOver
                   ? "2px dashed #27374D"
                   : "1px dashed #ccc",
                 marginRight: "50px",
-                // overflow: 'auto', height: '100vh'
               }}
               {...provided.droppableProps}
             >

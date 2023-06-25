@@ -13,8 +13,7 @@ import { useTheme } from "@mui/material/styles";
 import userContext from "../userContext";
 
 function Layout({ isLogged, logout,appName }) {
-  // useState(false) inizializza lo stato della variabile isLogged
-  
+
   const [anchorEl, setAnchorEl] = useState(null);
   const navigate = useNavigate();
   const user = useContext(userContext);

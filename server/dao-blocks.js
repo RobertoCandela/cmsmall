@@ -1,7 +1,6 @@
 "use strict";
 
 const db = require("./db");
-const { v4: uuidv4 } = require("uuid");
 
 exports.getAllBlocks = () => {
   return new Promise((resolve, reject) => {
@@ -21,8 +20,6 @@ exports.deleteBlock = (id) => {
     const sql = "DELETE FROM blocks WHERE blocks.id=?";
     db.run(sql, [id],(err, row) => {
       if (err) {
-        console.log("err!");
-        console.log(err);
         reject(err);
       } else {
         resolve(row);

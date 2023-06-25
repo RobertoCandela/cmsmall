@@ -168,7 +168,7 @@ This table stores general settings for the application.
 
 ### Route Descriptions
 
-- `/`: The root route renders the `Layout` component, passing the `isLogged`, `logout`, and `appName` props. This is the base layout for the application.
+- `/`: The root route renders the `Home` component, passing the `loggedIn` props. This is the home for the application.
 
 - `/login`: This route renders the `Login` component if the user is not logged in. If the user is already logged in, they are redirected to the root route ("/").
 
@@ -223,7 +223,7 @@ This table stores general settings for the application.
 ![Screenshot](./usage_screenshots/page_render.png)
 
 ## Users Credentials
-The password are the same for every user. Not the best security practice, but useful for debug purpose!
+The passwords are the same for each user. Not the best security practice, but useful for debug purpose!
 
 - admin, admin
 - rcandela, Aa12345! (draft,published page)

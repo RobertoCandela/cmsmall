@@ -2,7 +2,6 @@ import { Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 
 export function PageRender({ page }) {
-  //const sortedBlocks = page.blocks.sort((a, b) => a.item_order - b.item_order);
 
   const [sortedBlocks, setSortedBlocks] = useState([]);
 
@@ -13,11 +12,8 @@ export function PageRender({ page }) {
   }, [page]);
 
   function renderItem(item) {
-    //Render logic here
-    console.log(item);
     switch (item.blockType) {
       case "h": {
-        console.log("header");
         return (
           <Typography
             variant="h2"
@@ -32,7 +28,6 @@ export function PageRender({ page }) {
         );
       }
       case "p": {
-        console.log("paragraph");
         return (
           <Typography
             variant="body1"
@@ -43,7 +38,6 @@ export function PageRender({ page }) {
         );
       }
       case "img": {
-        console.log("image");
 
         return (
           <div

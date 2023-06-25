@@ -52,8 +52,6 @@ export function NewPage() {
       });
   }
 
-  console.log(assignedUser)
-  console.log(user)
   return (
     <>
       <Button

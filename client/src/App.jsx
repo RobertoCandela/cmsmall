@@ -62,7 +62,6 @@ function App() {
 
   async function getAppName() {
     const settings = await getSettings();
-    console.log(settings);
     settings.forEach((s) => {
       if (s.id === "appName") {
         setAppName(s.value);
@@ -73,9 +72,6 @@ function App() {
   const init = async () => {
     try {
       const user = await getCurrentSession();
-
-      console.log(user)
-
       if (user) {
         setUser(user);
         setLoggedIn(true);
@@ -107,7 +103,6 @@ function App() {
     try {
       const user = await login(userCredentials);
       if (user) {
-        console.log("setting loggedin...")
         setUser(user);
         setLoggedIn(true);
       }else{
@@ -128,8 +123,6 @@ function App() {
   const handleSignup = async (user) => {
     try {
       const newUser = await signup(user);
-      console.log("newUser value");
-      console.log(newUser);
       if (newUser) {
         setUser(newUser);
         setLoggedIn(true);

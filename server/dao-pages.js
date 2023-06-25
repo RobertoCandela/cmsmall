@@ -15,12 +15,9 @@ exports.getAllPages = (session) => {
     var sql = "";
 
     if (!session) {
-      //page with status 'published'
-      console.log("not logged user");
       sql =
         "SELECT pages.*, users.username FROM pages JOIN users ON pages.author = users.id WHERE pages.publication_date <= date('now') AND pages.publication_date <> '' ORDER BY pages.publication_date;";
     } else {
-      console.log("logged user");
       sql =
         "SELECT pages.*, users.username FROM pages JOIN users ON pages.author = users.id ORDER BY pages.publication_date";
     }
@@ -93,8 +90,6 @@ exports.getPageAuthor = () => {
 };
 function checkBlockAlreadyExists(block_id) {
   return new Promise((resolve, reject) => {
-    console.log("BLOCK_ID");
-    console.log(block_id);
     const sql = "SELECT * FROM blocks WHERE blocks.id=?";
 
     db.get(sql, [block_id], (err, row) => {
@@ -103,10 +98,6 @@ function checkBlockAlreadyExists(block_id) {
         console.log(err);
         reject(err);
       } else {
-        console.log("the block is new ? ");
-        console.log("retrieved block...");
-        console.log(row);
-        console.log(row ? false : true);
         resolve(row ? false : true);
       }
     });
@@ -117,17 +108,8 @@ exports.modifyPage = (page) => {
     // db.run(sql, [film.title, film.favorite, film.watchDate, film.rating, film.user], function (err)
     const id_page = page.id;
 
-    console.log("Updating with uuid: " + id_page);
-    console.log("printing payload...");
-    console.log(page);
-
     const now = new Date().toISOString();
 
-    console.log("creationTime: " + now);
-
-    console.log("updating author with user id ");
-
- 
     if (page.author) {
       const sql =
         "UPDATE pages SET title = ?, author=?, publication_date=? WHERE pages.id=?";
@@ -138,15 +120,7 @@ exports.modifyPage = (page) => {
             if (err) {
               reject(err);
             } else {
-              // const orderedPageBlocks = page.blocks.sort((a, b) => a.item_order - b.item_order)
-              // console.log('====================')
-              // console.log('ordered page blocks')
-              // console.log(orderedPageBlocks)
               page.blocks.forEach(async (block) => {
-                /*create pageblocks*/
-                //INSERT INTO blocks (id, name, type, contents, page_blocks, item_order)s
-    
-                //check component already exists:
                 const checkFlag = await checkBlockAlreadyExists(block.id);
                 console.log("PRINTING CHECK FLAG");
                 console.log(checkFlag);
@@ -202,15 +176,7 @@ exports.modifyPage = (page) => {
           if (err) {
             reject(err);
           } else {
-            // const orderedPageBlocks = page.blocks.sort((a, b) => a.item_order - b.item_order)
-            // console.log('====================')
-            // console.log('ordered page blocks')
-            // console.log(orderedPageBlocks)
             page.blocks.forEach(async (block) => {
-              /*create pageblocks*/
-              //INSERT INTO blocks (id, name, type, contents, page_blocks, item_order)s
-  
-              //check component already exists:
               const checkFlag = await checkBlockAlreadyExists(block.id);
               console.log("PRINTING CHECK FLAG");
               console.log(checkFlag);

@@ -59,14 +59,6 @@ function Signup({signup}) {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    console.log({
-      surname: lastName,
-      name: firstName,
-      username: username,
-      email: email,
-      password: password,
-    });
-
     const user = {
       surname: lastName,
       name: firstName,
