@@ -7,7 +7,6 @@ import { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { deletePage } from "../service/page-service";
 import Modal from "./modal";
-import { useSnackbar } from "notistack";
 import userContext from "../userContext";
 //TODO: manage edit and delete based on user profiles
 function PageCard({ data, getPages, style }) {
@@ -16,11 +15,7 @@ function PageCard({ data, getPages, style }) {
   const history = useNavigate();
   var now = new Date().setHours(0, 0, 0, 0);
   var publicationDate = new Date(data.publication_date).setHours(0, 0, 0, 0);
-  const { enqueueSnackbar } = useSnackbar();
   const user = useContext(userContext);
-
-  console.log("userContext: ");
-  console.log(user)
 
   const handleDelete = async () => {
     const status = await deletePage(data.id);

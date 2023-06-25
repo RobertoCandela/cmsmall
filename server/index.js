@@ -63,18 +63,18 @@ app.use(passport.authenticate("session"));
 const errorFormatter = ({ location, msg, param, value, nestedErrors }) => {
   return `${location}[${param}]: ${msg}`;
 };
-app.delete("/sessions/current", (req, res) => {
+app.delete("/api/sessions/current", (req, res) => {
   req.logout(() => {
     res.status(200).json({});
   });
 });
-app.get("/sessions/current", (req, res) => {
+app.get("/api/sessions/current", (req, res) => {
   if (req.isAuthenticated()) {
     res.status(200).json(req.user);
   } else res.status(401).json({ error: "Not authenticated" });
 });
 // Esempio di route che esegue una query sul database
-app.get("/users", (req, res) => {
+app.get("/api/users", (req, res) => {
   userDao
     .getAllUsers()
     .then((resp) => {
@@ -83,7 +83,7 @@ app.get("/users", (req, res) => {
     .catch((err) => res.status(500).json(err));
 });
 app.post(
-  "/users",
+  "/api/users",
   [
     check("name").isLength({ min: 1, max: 50 }).withMessage("invalid name"),
     check("surname")
@@ -130,7 +130,7 @@ app.post(
       });
   }
 );
-app.get("/users/:id", (req, res) => {
+app.get("/api/users/:id", (req, res) => {
   userDao
     .getUserById(req.params.id)
     .then((resp) => {
@@ -139,7 +139,7 @@ app.get("/users/:id", (req, res) => {
     .catch((err) => res.status(500).json(err));
 });
 
-app.delete("/users/:id", (req, res) => {
+app.delete("/api/users/:id", (req, res) => {
   userDao
     .deleteUser(req.params.id)
     .then((resp) => {
@@ -148,7 +148,7 @@ app.delete("/users/:id", (req, res) => {
     .catch((err) => res.status(500).json(err));
 });
 
-app.get("/pages", (req, res) => {
+app.get("/api/pages", (req, res) => {
   var session = undefined;
   if (req.isAuthenticated()) {
     console.log("the user is authenticated");
@@ -161,7 +161,7 @@ app.get("/pages", (req, res) => {
     })
     .catch((err) => res.status(500).json(err));
 });
-app.get("/pages/:id", (req, res) => {
+app.get("/api/pages/:id", (req, res) => {
   pageDao
     .getPage(req.params.id)
     .then((resp) => {
@@ -170,7 +170,7 @@ app.get("/pages/:id", (req, res) => {
     .catch((err) => res.status(500).json(err));
 });
 app.put(
-  "/pages/:id",
+  "/api/pages/:id",
   [
     check("title")
       .isLength({ min: 1, max: 50 })
@@ -183,25 +183,17 @@ app.put(
       .isArray()
       .notEmpty()
       .custom((value) => {
-        //console.log(value)
+        
         const containsHeader = value.some(
-          (obj) => obj.blockType === "h" && !(obj.content === "")
-        );
-        const containsParagraph = value.some(
-          (obj) => obj.blockType === "p" && !(obj.content === "")
+          (obj) => obj.blockType === "h" && obj.content !== ""
         );
         const containsImage = value.some(
-          (obj) => obj.blockType === "img" && !(obj.content === "")
-        );
-        const containsImageContent = value.some(
           (obj) => obj.blockType === "img" && obj.content !== ""
         );
-
-        if (
-          containsHeader &&
-          (containsParagraph || containsImage) &&
-          containsImageContent
-        ) {
+        const containsParagraph = value.some(
+          (obj) => obj.blockType === "p" && obj.content !== ""
+        );
+        if ((containsHeader && (containsImage || containsParagraph))) {
           return true;
         }
         return false;
@@ -230,7 +222,7 @@ app.put(
       .catch((err) => res.status(500).json(err));
   }
 );
-app.delete("/pages/:id", (req, res) => {
+app.delete("/api/pages/:id", (req, res) => {
   pageDao
     .deletePage(req.params.id)
     .then((resp) => {
@@ -239,7 +231,7 @@ app.delete("/pages/:id", (req, res) => {
     .catch((err) => res.status(500).json(err));
 });
 
-app.delete("/blocks/:id", (req, res) => {
+app.delete("/api/blocks/:id", (req, res) => {
   blocksDao
     .deleteBlock(req.params.id)
     .then((resp) => {
@@ -248,7 +240,7 @@ app.delete("/blocks/:id", (req, res) => {
     .catch((err) => res.status(500).json(err));
 });
 app.post(
-  "/pages",
+  "/api/pages",
   [
     check("title")
       .isLength({ min: 1, max: 50 })
@@ -286,8 +278,8 @@ app.post(
         );
         if (
           containsHeader &&
-          (containsParagraph || containsImage) &&
-          containsImageContent
+          (containsParagraph || containsImage&&containsImageContent)
+          
         ) {
           return true;
         }
@@ -324,7 +316,7 @@ app.post(
 );
 
 //Authentication API
-app.post("/sessions", function (req, res, next) {
+app.post("/api/sessions", function (req, res, next) {
   passport.authenticate("local", (err, user, info) => {
     if (err) return next(err);
     if (!user) {
@@ -342,7 +334,7 @@ app.post("/sessions", function (req, res, next) {
   })(req, res, next);
 });
 
-app.post("/signup", async function (req, res, next) {
+app.post("/api/signup", async function (req, res, next) {
   try {
     const newUser = await userDao.createUser({
       name: req.body.name,
@@ -382,7 +374,7 @@ app.get("/api/sessions/current", (req, res) => {
   } else res.status(401).json({ error: "Not authenticated" });
 });
 
-app.get("/settings", (req, res) => {
+app.get("/api/settings", (req, res) => {
   settingsDao
     .getSettings()
     .then((resp) => {
@@ -391,7 +383,7 @@ app.get("/settings", (req, res) => {
     .catch((err) => console.log(err));
 });
 
-app.put("/settings/:id",(req,res)=>{
+app.put("/api/settings/:id",(req,res)=>{
   console.log(req.body)
   settingsDao
     .updateSettings(req.body)

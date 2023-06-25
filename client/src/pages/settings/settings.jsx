@@ -1,7 +1,5 @@
 import { Button, TextField } from "@mui/material";
-import "./settings.css";
-import { useEffect, useState } from "react";
-import { updateSetting } from "../../service/settings-service";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSnackbar } from "notistack";
 

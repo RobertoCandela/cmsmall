@@ -1,6 +1,9 @@
 # dependencies
 node_modules/
 
+#database binary
+
+server/database/sqlite3
 # misc
 .DS_Store
 Thumbs.db

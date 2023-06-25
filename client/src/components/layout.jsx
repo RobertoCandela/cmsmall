@@ -8,12 +8,9 @@ import AccountCircle from "@mui/icons-material/AccountCircle";
 import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
 import IconButton from "@mui/material/IconButton";
-import Container from "@mui/material/Container";
-import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import { useTheme } from "@mui/material/styles";
-import { getCurrentSession } from "../service/auth-service";
 import userContext from "../userContext";
-import { getSettings } from "../service/settings-service";
 
 function Layout({ isLogged, logout,appName }) {
   // useState(false) inizializza lo stato della variabile isLogged

@@ -2,10 +2,9 @@ import { Button, ButtonGroup, TextField } from "@mui/material";
 import { Canvas } from "../../components/canvas";
 
 import { useContext, useEffect, useState } from "react";
-import Modal from "../../components/modal";
 import KeyboardBackspaceRoundedIcon from "@mui/icons-material/KeyboardBackspaceRounded";
 import { useNavigate, useParams } from "react-router-dom";
-import { createPage, getPage, updatePage } from "../../service/page-service";
+import { getPage, updatePage } from "../../service/page-service";
 import { enqueueSnackbar } from "notistack";
 import ComboBox from "../../components/combobox";
 import userContext from "../../userContext";
@@ -15,7 +14,6 @@ function ModifyPage() {
   const [publishDate, setPublishDate] = useState("");
   const [assignedUser, setAssignedUser] = useState(undefined);
   const [pageAuthor,setPageAuthor] = useState("")
-  const [open, setOpen] = useState(false);
   const [canvasItem, setCanvasItem] = useState([]);
   const user = useContext(userContext);
 

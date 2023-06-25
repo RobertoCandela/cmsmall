@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { DragDropContext, Draggable } from "react-beautiful-dnd";
 import { StrictModeDroppable } from "./droppable";
@@ -6,17 +5,14 @@ import { StrictModeDroppable } from "./droppable";
 import SubjectRoundedIcon from "@mui/icons-material/SubjectRounded";
 import TextFieldsRoundedIcon from "@mui/icons-material/TextFieldsRounded";
 import PhotoSizeSelectActualRoundedIcon from "@mui/icons-material/PhotoSizeSelectActualRounded";
-import { IconButton, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
 import { Header } from "./header";
 import { Paragraph } from "./paragraph";
 
 import { Image } from "./image";
 
-import { HighlightOffRounded } from "@mui/icons-material";
-import Modal from "./modal";
-
 export function Canvas({ destinationItems, setDestinationItems }) {
-  const [sourceItems, setSourceItems] = useState([
+  const sourceItems = [
     {
       id: "h",
       content: "<h>Header</h>",
@@ -35,7 +31,7 @@ export function Canvas({ destinationItems, setDestinationItems }) {
       title: "Image",
       icon: <PhotoSizeSelectActualRoundedIcon />,
     },
-  ]);
+  ];
 
   const handleDragEnd = (result) => {
     if (!result.destination) return;
@@ -70,9 +66,6 @@ export function Canvas({ destinationItems, setDestinationItems }) {
   }
 
   function handleSelectedImage(path, item_id) {
-    console.log("path: " + path);
-
-    console.log("item_id: " + item_id);
     const aux = [...destinationItems];
     aux.forEach((e) => {
       if (e.id === item_id) {
@@ -82,9 +75,6 @@ export function Canvas({ destinationItems, setDestinationItems }) {
     setDestinationItems(aux);
   }
   function handleSelectedItem(content, item_id) {
-    console.log("content: " + content);
-
-    console.log("item_id: " + item_id);
     const aux = [...destinationItems];
     aux.forEach((e) => {
       if (e.id === item_id) {
@@ -99,7 +89,6 @@ export function Canvas({ destinationItems, setDestinationItems }) {
     console.log(item);
     switch (item.blockType) {
       case "h": {
-        console.log("header");
         return (
           <Header
             item={item}
@@ -111,7 +100,6 @@ export function Canvas({ destinationItems, setDestinationItems }) {
         );
       }
       case "p": {
-        console.log("paragraph");
         return (
           <Paragraph
             item={item}
@@ -123,8 +111,6 @@ export function Canvas({ destinationItems, setDestinationItems }) {
         );
       }
       case "img": {
-        console.log("image");
-
         return (
           <Image
             item={item}

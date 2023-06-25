@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import "./page.css";
 import { getPage } from "../../service/page-service";
 import { useParams } from "react-router-dom";
 import { PageRender } from "../../components/page-render";

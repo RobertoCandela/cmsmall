@@ -1,6 +1,5 @@
 import { HighlightOffRounded } from "@mui/icons-material";
 import { IconButton, TextField, TextareaAutosize } from "@mui/material";
-import Typography from "@mui/material/Typography";
 import { useState } from "react";
 
 export function Paragraph({ item, discardItem,handleSelectedItem }) {

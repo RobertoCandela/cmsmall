@@ -1,5 +1,5 @@
 import { HighlightOffRounded } from "@mui/icons-material";
-import { IconButton, TextField, Typography } from "@mui/material";
+import { IconButton, TextField } from "@mui/material";
 import { useState } from "react";
 
 export function Header({ item, discardItem, handleSelectedItem }) {

@@ -28,10 +28,6 @@ export function NewPage() {
   };
 
   function savePage() {
-    //INSERT INTO blocks (id, name, type, contents, page_blocks, item_order)
-
-    console.log("userFromContext");
-    console.log(user);
 
     const page = {
       title: pageName,

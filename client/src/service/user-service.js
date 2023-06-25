@@ -1,4 +1,4 @@
-const url = "http://localhost:3000";
+const url = "http://localhost:3000/api";
 function getJson(httpResponsePromise) {
     // server API always return JSON, in case of error the format is the following { error: <message> }
     return new Promise((resolve, reject) => {
