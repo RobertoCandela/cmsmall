@@ -89,7 +89,7 @@ function Layout({ isLogged, logout,appName }) {
           )}
         </Toolbar>
       </AppBar>
-      <div style={{ padding: "32px" }}>
+      <div style={{ padding: "32px", marginBottom:"62px" }}>
         {/* <Container maxWidth="xl">
         <Box sx={{ height: "calc(100vh - 192px)", padding: "32px" }}> */}
         <Outlet />
