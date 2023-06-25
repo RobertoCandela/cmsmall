@@ -12,6 +12,7 @@ import { Paragraph } from "./paragraph";
 import { Image } from "./image";
 
 export function Canvas({ destinationItems, setDestinationItems }) {
+  //array of available component for drag and drop
   const sourceItems = [
     {
       id: "h",
