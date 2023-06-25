@@ -12,7 +12,7 @@ import { Paragraph } from "./paragraph";
 import { Image } from "./image";
 
 export function Canvas({ destinationItems, setDestinationItems }) {
-  //array of available component for drag and drop
+  //source items available for dragging
   const sourceItems = [
     {
       id: "h",
@@ -34,7 +34,9 @@ export function Canvas({ destinationItems, setDestinationItems }) {
     },
   ];
 
+  //handle the drag end event
   const handleDragEnd = (result) => {
+    //check if there is a valid destination
     if (!result.destination) return;
 
     const sourceIndex = result.source.index;
@@ -47,12 +49,14 @@ export function Canvas({ destinationItems, setDestinationItems }) {
     if (result.destination.droppableId === "destination") {
       const updatedDestinationItems = [...destinationItems];
       if (result.source.droppableId !== "destination") {
+        //add a new item to the destination list
         updatedDestinationItems.splice(destinationIndex, 0, {
           id: uuidv4(),
           content: "",
           blockType: draggedItem.id,
         });
       } else {
+        //reorder items within the destination list
         const [removedItem] = updatedDestinationItems.splice(sourceIndex, 1);
         updatedDestinationItems.splice(destinationIndex, 0, removedItem);
       }
@@ -61,11 +65,13 @@ export function Canvas({ destinationItems, setDestinationItems }) {
   };
 
   function discardItem(id) {
+    //remove item from the destination list
     const aux = destinationItems.filter((i) => i.id != id);
     setDestinationItems(aux);
   }
 
   function handleSelectedImage(path, item_id) {
+    //update the content of the item with the selected image path
     const aux = [...destinationItems];
     aux.forEach((e) => {
       if (e.id === item_id) {
@@ -74,7 +80,9 @@ export function Canvas({ destinationItems, setDestinationItems }) {
     });
     setDestinationItems(aux);
   }
+
   function handleSelectedItem(content, item_id) {
+    //update the content of the item
     const aux = [...destinationItems];
     aux.forEach((e) => {
       if (e.id === item_id) {
@@ -85,9 +93,11 @@ export function Canvas({ destinationItems, setDestinationItems }) {
   }
 
   function renderItem(item) {
+    //render different components based on the blockType
     switch (item.blockType) {
       case "h": {
         return (
+          //render a Header component
           <Header
             item={item}
             discardItem={() => discardItem(item.id)}
@@ -99,6 +109,7 @@ export function Canvas({ destinationItems, setDestinationItems }) {
       }
       case "p": {
         return (
+          //render a Paragraph component
           <Paragraph
             item={item}
             discardItem={() => discardItem(item.id)}
@@ -110,6 +121,7 @@ export function Canvas({ destinationItems, setDestinationItems }) {
       }
       case "img": {
         return (
+          //render an Image component
           <Image
             item={item}
             discardItem={() => discardItem(item.id)}
@@ -118,7 +130,7 @@ export function Canvas({ destinationItems, setDestinationItems }) {
         );
       }
       default: {
-        console.log("Not a valid render item");
+        console.log("not a valid render item");
       }
     }
   }
@@ -190,7 +202,7 @@ export function Canvas({ destinationItems, setDestinationItems }) {
               }}
               {...provided.droppableProps}
             >
-              <h3>Components</h3>
+              <h3>components</h3>
               {sourceItems.map((item, index) => (
                 <Draggable key={item.id} draggableId={item.id} index={index}>
                   {(provided) => (
@@ -210,8 +222,7 @@ export function Canvas({ destinationItems, setDestinationItems }) {
                     >
                       {item.icon}
                       <Typography sx={{ marginLeft: "3px" }}>
-                        {" "}
-                        {item.title}{" "}
+                        {item.title}
                       </Typography>
                     </div>
                   )}

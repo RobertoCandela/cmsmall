@@ -1,5 +1,4 @@
 "use strict";
-
 /** DB access module **/
 
 const sqlite = require("sqlite3");

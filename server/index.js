@@ -46,9 +46,10 @@ app.use(bodyParser.json());
 
 app.use(
   session({
+    cookie:{_expires:600*1000},
     secret: "3aBc9D1e8F2gH7jK",
     resave: false,
-    saveUninitialized: false,
+    saveUninitialized: false
   })
 );
 

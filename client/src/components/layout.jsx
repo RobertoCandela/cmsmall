@@ -96,6 +96,7 @@ function Layout({ isLogged, logout, appName }) {
 
       <div
         style={{
+          zIndex:1000,
           height: "64px",
           backgroundColor: theme.palette.primary.main,
           alignItems: "center",

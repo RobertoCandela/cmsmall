@@ -23,7 +23,7 @@ export default function ComboBox({ assignedUser, setAssignedUser }) {
     users.length > 0 && (
       <Autocomplete
         disablePortal
-        id="combo-box-demo"
+        id="combo-box-user"
         value={assignedUser}
         options={users}
         sx={{ width: 300 }}
