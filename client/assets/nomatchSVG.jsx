@@ -1,5 +1,3 @@
-// @ts-ignore
-// @ts-ignore
 export const NoMatchSVG = ({ ...props }) => (
   <svg
     width="700px"
