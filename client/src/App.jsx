@@ -126,8 +126,6 @@ function App() {
       if (newUser) {
         setUser(newUser);
         setLoggedIn(true);
-
-        //handleLogin({ username: newUser.username, password: newUser.password });
       }
     } catch (err) {
       console.log(err);

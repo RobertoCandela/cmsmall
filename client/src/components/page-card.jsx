@@ -8,7 +8,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { deletePage } from "../service/page-service";
 import Modal from "./modal";
 import userContext from "../userContext";
-//TODO: manage edit and delete based on user profiles
+
 function PageCard({ data, getPages, style }) {
   const [hover, setHover] = useState(false);
   const [open, setOpen] = useState(false);

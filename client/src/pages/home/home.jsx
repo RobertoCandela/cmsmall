@@ -19,7 +19,7 @@ function Home({loggedIn}) {
       console.log(resp);
     });
   };
-  //viene fatto solo al primo render della pagina perchè le quadre sono vuote e non ci sono variabili che possono cambiare
+  
   useEffect(() => {
     getPagesHandler();
 

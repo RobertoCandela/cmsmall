@@ -57,6 +57,6 @@ export const signup = async (user) => {
 export const logout = async () => {
   return getJson(fetch(url + "/sessions/current", {
     method: "DELETE",
-    credentials: "include", // this parameter specifies that authentication cookie must be forwared
+    credentials: "include", 
   }));
 };

@@ -29,5 +29,4 @@ export function Header({ item, discardItem, handleSelectedItem }) {
       ></TextField>
     </div>
   );
-  //return <Typography variant="h3">fff</Typography>
 }

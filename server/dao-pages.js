@@ -7,11 +7,7 @@ const blocksDao = require("./dao-blocks");
 
 exports.getAllPages = (session) => {
   return new Promise((resolve, reject) => {
-    //Se la sessione non è valida, l'utente non è loggato. Quindi ritorno un set di pagine solo in stato Published.
-    //Se la sessione è valida, ritorno tutte le pagine.
-    //Il controllo sul modify e delete va fatto frontend
-
-    //Se la sessione è valida e in oltre l'utente loggato è admin deve poter cancellare e modificare qualsiasi pagina, e inoltre avere la possibilità di cambiare l'autore di una pagina.
+  
     var sql = "";
 
     if (!session) {
@@ -61,13 +57,11 @@ exports.getPage = (page_id) => {
 exports.deletePage = (page_id) => {
   return new Promise((resolve, reject) => {
     const sql = "DELETE FROM pages WHERE pages.id = ?";
-    // db.setForeignKeyConstraintsEnabled(true)
     db.get("PRAGMA foreign_keys=ON");
     db.run(sql, [page_id], (err, row) => {
       if (err) {
         reject(err);
       } else {
-        console.log(row);
         resolve(row);
       }
     });
@@ -105,7 +99,6 @@ function checkBlockAlreadyExists(block_id) {
 }
 exports.modifyPage = (page) => {
   return new Promise((resolve, reject) => {
-    // db.run(sql, [film.title, film.favorite, film.watchDate, film.rating, film.user], function (err)
     const id_page = page.id;
 
     const now = new Date().toISOString();
@@ -122,8 +115,6 @@ exports.modifyPage = (page) => {
             } else {
               page.blocks.forEach(async (block) => {
                 const checkFlag = await checkBlockAlreadyExists(block.id);
-                console.log("PRINTING CHECK FLAG");
-                console.log(checkFlag);
                 if (!checkFlag) {
                   const sqlBlocks =
                     "UPDATE blocks SET content=?, item_order=? WHERE blocks.id=?";
@@ -131,7 +122,6 @@ exports.modifyPage = (page) => {
                     sqlBlocks,
                     [block.content, block.item_order, block.id],
                     (err, row) => {
-                      console.log("DOING UPDATE ON ALREADY EXISTING ITEM");
                       if (err) {
                         reject(err);
                       } else {
@@ -178,8 +168,6 @@ exports.modifyPage = (page) => {
           } else {
             page.blocks.forEach(async (block) => {
               const checkFlag = await checkBlockAlreadyExists(block.id);
-              console.log("PRINTING CHECK FLAG");
-              console.log(checkFlag);
               if (!checkFlag) {
                 const sqlBlocks =
                   "UPDATE blocks SET content=?, item_order=? WHERE blocks.id=?";
@@ -187,7 +175,6 @@ exports.modifyPage = (page) => {
                   sqlBlocks,
                   [block.content, block.item_order, block.id],
                   (err, row) => {
-                    console.log("DOING UPDATE ON ALREADY EXISTING ITEM");
                     if (err) {
                       reject(err);
                     } else {
@@ -242,7 +229,6 @@ exports.modifyPage = (page) => {
               .deleteBlock(r.id)
               .then((resp) => {
                 if (resp) {
-                  console.log("Block " + r.id + " deleted successfully");
                   resolve(resp);
                 }
               })
@@ -256,16 +242,11 @@ exports.modifyPage = (page) => {
 };
 exports.createPage = (page) => {
   return new Promise((resolve, reject) => {
-    // db.run(sql, [film.title, film.favorite, film.watchDate, film.rating, film.user], function (err)
+    
     const id_page = uuidv4();
 
-    console.log("Creating new page with uuid: " + id_page);
-    console.log("printing payload...");
-    console.log(page);
 
     const now = new Date().toISOString();
-
-    console.log("creationTime: " + now);
 
     const sql =
       "INSERT INTO pages (id, title, author, created_at, publication_date) VALUES(?, ?, ?, ?, ?)";
@@ -277,8 +258,6 @@ exports.createPage = (page) => {
           reject(err);
         } else {
           page.blocks.forEach((block, index) => {
-            /*create pageblocks*/
-            //INSERT INTO blocks (id, name, type, contents, page_blocks, item_order)
             const sqlBlocks =
               "INSERT INTO blocks (id, blockType, content, page_blocks, item_order) VALUES(?,?,?,?,?)";
             db.run(

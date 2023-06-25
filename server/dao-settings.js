@@ -15,10 +15,6 @@ exports.getSettings = () => {
 
   exports.updateSettings = (setting) => {
     return new Promise((resolve, reject) => {
-      // db.run(sql, [film.title, film.favorite, film.watchDate, film.rating, film.user], function (err)
-  
-      console.log("Update setting id: " + setting.id);
-      console.log("Update with value: "+setting.value)
   
       const sql =
         "UPDATE settings SET value = ? WHERE settings.id=?";
