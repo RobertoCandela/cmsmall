@@ -180,23 +180,55 @@ app.put(
       .isDate({ format: "YYYY-MM-DD" })
       .withMessage("Invalid publication date"),
     check("blocks")
-      .isArray()
-      .notEmpty()
+      .isArray({ min: 2 }) // The array must have at least one element
       .custom((value) => {
-        
-        const containsHeader = value.some(
-          (obj) => obj.blockType === "h" && obj.content !== ""
+        const hasValidContent = value.some(
+          (block) => ((block.blockType === 'p' || block.blockType === 'img') && block.content !== '')
         );
-        const containsImage = value.some(
-          (obj) => obj.blockType === "img" && obj.content !== ""
+        const hasValidHeader = value.some(
+          (block) => block.blockType === 'h' && block.content !== ''
         );
-        const containsParagraph = value.some(
-          (obj) => obj.blockType === "p" && obj.content !== ""
-        );
-        if ((containsHeader && (containsImage || containsParagraph))) {
-          return true;
+  
+        if (!hasValidHeader) {
+          return false;
         }
-        return false;
+  
+        if (!hasValidContent) {
+         return false;
+        }
+        // Check that all objects with blockType 'h' have a non-empty content
+        const headerErrors = value
+          .filter((block) => block.blockType === 'h')
+          .map((block) => {
+            if (block.content === '') {
+              return `The content of the object with blockType "h" cannot be empty`
+            }
+            return null; // No error
+          })
+          .filter((error) => error !== null); // Filter out non-null errors
+  
+        if (headerErrors.length > 0) {
+          return false;
+        }
+  
+        // Find all objects with blockType 'p' or 'img' and validate that they have a valid content
+        const contentErrors = value
+          .filter(
+            (block) => block.blockType === 'p' || block.blockType === 'img'
+          )
+          .map((block) => {
+            if (block.content === '') {
+              return `The content of the object with blockType "${block.blockType}" cannot be empty`;
+            }
+            return null; // No error
+          })
+          .filter((error) => error !== null); // Filter out non-null errors
+  
+        if (contentErrors.length > 0) {
+          return false;
+        }
+  
+        return true; // Validation passed
       })
       .withMessage(
         "The page must contains at least one header, one image and one paragraph with some content"
@@ -212,7 +244,7 @@ app.put(
       title: req.body.title,
       publication_date: req.body.publication_date,
       blocks: req.body.blocks,
-      author: req.body.author
+      author: req.body.author,
     };
     pageDao
       .modifyPage(page)
@@ -252,38 +284,56 @@ app.post(
       .optional({ values: "falsy" })
       .isDate({ format: "YYYY-MM-DD" })
       .withMessage("Invalid Publication date"),
-    check("blocks")
-      .isArray()
-      .notEmpty()
+      check("blocks")
+      .isArray({ min: 2 }) // The array must have at least one element
       .custom((value) => {
-        console.log(value);
-        const containsHeader = value.some(
-          (obj) => obj.blockType === "h" && !(obj.content === "")
+        const hasValidContent = value.some(
+          (block) => ((block.blockType === 'p' || block.blockType === 'img') && block.content !== '')
         );
-        const containsParagraph = value.some(
-          (obj) => obj.blockType === "p" && !(obj.content === "")
+        const hasValidHeader = value.some(
+          (block) => block.blockType === 'h' && block.content !== ''
         );
-        const containsImage = value.some(
-          (obj) => obj.blockType === "img" && !(obj.content === "")
-        );
-        const containsImageContent = value.some(
-          (obj) => obj.blockType === "img" && obj.content !== ""
-        );
-
-        //check if image exists the content must be populated
-        console.log(
-          containsHeader &&
-            (containsParagraph || containsImage) &&
-            containsImageContent
-        );
-        if (
-          containsHeader &&
-          (containsParagraph || containsImage&&containsImageContent)
-          
-        ) {
-          return true;
+  
+        if (!hasValidHeader) {
+          return false;
         }
-        return false;
+  
+        if (!hasValidContent) {
+         return false;
+        }
+        // Check that all objects with blockType 'h' have a non-empty content
+        const headerErrors = value
+          .filter((block) => block.blockType === 'h')
+          .map((block) => {
+            if (block.content === '') {
+              return `The content of the object with blockType "h" cannot be empty`
+            }
+            return null; // No error
+          })
+          .filter((error) => error !== null); // Filter out non-null errors
+  
+        if (headerErrors.length > 0) {
+          return false;
+        }
+  
+        // Find all objects with blockType 'p' or 'img' and validate that they have a valid content
+        const contentErrors = value
+          .filter(
+            (block) => block.blockType === 'p' || block.blockType === 'img'
+          )
+          .map((block) => {
+            if (block.content === '') {
+              return `The content of the object with blockType "${block.blockType}" cannot be empty`;
+            }
+            return null; // No error
+          })
+          .filter((error) => error !== null); // Filter out non-null errors
+  
+        if (contentErrors.length > 0) {
+          return false;
+        }
+  
+        return true; // Validation passed
       })
       .withMessage(
         "The page must contains at least one header, one image and one paragraph with some content"
@@ -378,21 +428,20 @@ app.get("/api/settings", (req, res) => {
   settingsDao
     .getSettings()
     .then((resp) => {
-      res.json(resp)
+      res.json(resp);
     })
     .catch((err) => console.log(err));
 });
 
-app.put("/api/settings/:id",(req,res)=>{
-  console.log(req.body)
+app.put("/api/settings/:id", (req, res) => {
+  console.log(req.body);
   settingsDao
     .updateSettings(req.body)
     .then((resp) => {
-      res.json(resp)
+      res.json(resp);
     })
     .catch((err) => console.log(err));
-
-})
+});
 
 // DELETE /api/session/current
 // This route is used for loggin out the current user.
