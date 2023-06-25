@@ -63,11 +63,7 @@ app.use(passport.authenticate("session"));
 const errorFormatter = ({ location, msg, param, value, nestedErrors }) => {
   return `${location}[${param}]: ${msg}`;
 };
-app.delete("/api/sessions/current", (req, res) => {
-  req.logout(() => {
-    res.status(200).json({});
-  });
-});
+
 app.get("/api/sessions/current", (req, res) => {
   if (req.isAuthenticated()) {
     res.status(200).json(req.user);
@@ -134,7 +130,12 @@ app.get("/api/users/:id", (req, res) => {
   userDao
     .getUserById(req.params.id)
     .then((resp) => {
-      res.json(resp);
+      if(resp){
+        res.json(resp);
+      }else{
+        res.status(404).json({ error: "User not found" });
+      }
+      
     })
     .catch((err) => res.status(500).json(err));
 });
@@ -143,7 +144,12 @@ app.delete("/api/users/:id", (req, res) => {
   userDao
     .deleteUser(req.params.id)
     .then((resp) => {
-      res.status(204).json(resp);
+      if(resp){
+        res.status(204).json(resp);
+      }else{
+        res.status(404).json({error: "Block not found"})
+      }
+      
     })
     .catch((err) => res.status(500).json(err));
 });
@@ -151,7 +157,7 @@ app.delete("/api/users/:id", (req, res) => {
 app.get("/api/pages", (req, res) => {
   var session = undefined;
   if (req.isAuthenticated()) {
-    console.log("the user is authenticated");
+    console.log("The user is authenticated");
     session = req.user;
   }
   pageDao
